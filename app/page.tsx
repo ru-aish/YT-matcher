@@ -33,6 +33,17 @@ export default function Home() {
             <Link href="/sign-up" className="text-blue-600 hover:underline">Sign Up</Link>
           </div>
         </div>
+
+        <div className="mt-8 p-4 border rounded-xl bg-orange-50 max-w-xl">
+          <h2 className="text-md font-semibold text-orange-800 mb-2">Developer Test Accounts</h2>
+          <p className="text-sm text-orange-700 mb-2">Use these credentials during development/review to quickly log in.</p>
+          <div className="text-left text-sm font-mono bg-white p-3 rounded border">
+            <p><strong>Brand Email:</strong> testbrand+clerk_test@example.com</p>
+            <p><strong>Creator Email:</strong> testcreator+clerk_test@example.com</p>
+            <p><strong>Test Password:</strong> <span className="bg-gray-100 px-1">password123</span></p>
+          </div>
+          <p className="text-xs mt-2 text-gray-500">Note: Actual users should sign up normally.</p>
+        </div>
       </div>
     </main>
   )
