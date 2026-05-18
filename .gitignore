@@ -1,0 +1,22 @@
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next
+out
+dist
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.env.example
