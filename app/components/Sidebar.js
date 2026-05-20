@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useClerk, useUser } from '@clerk/nextjs';
@@ -12,6 +13,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
+import { getChatThreadsAction } from '../campaign-actions';
 import styles from './Sidebar.module.css';
 
 function getInitials(name) {
@@ -58,11 +60,52 @@ function ClerkFooter({ dbUser, handleLogout }) {
 export default function Sidebar({ chatThreads = [], dbUser, collapsed, onToggle }) {
   const pathname = usePathname();
   const isDevBypass = isDevAuthBypassEnabled();
+  const [threads, setThreads] = useState(chatThreads);
+  const [loadingThreads, setLoadingThreads] = useState(chatThreads.length === 0 && !!dbUser?.profileCompleted);
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/profile', label: 'Profile', icon: UserCircle },
   ];
+
+  useEffect(() => {
+    setThreads(chatThreads);
+  }, [chatThreads]);
+
+  useEffect(() => {
+    if (!dbUser?.profileCompleted || chatThreads.length > 0) {
+      setLoadingThreads(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadChatThreads = async () => {
+      setLoadingThreads(true);
+
+      try {
+        const timeout = new Promise((resolve) => {
+          setTimeout(() => resolve({ timeout: true }), 4000);
+        });
+
+        const result = await Promise.race([getChatThreadsAction(), timeout]);
+
+        if (!cancelled && result && !result.timeout && result.success) {
+          setThreads(result.threads || []);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingThreads(false);
+        }
+      }
+    };
+
+    loadChatThreads();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [chatThreads.length, dbUser?.profileCompleted]);
 
   const isActive = (href) => {
     if (href === '/dashboard') {
@@ -121,13 +164,18 @@ export default function Sidebar({ chatThreads = [], dbUser, collapsed, onToggle 
 
       {/* Chat Threads */}
       <div className={styles.sidebarThreads}>
-        {chatThreads.length === 0 ? (
+        {loadingThreads ? (
+          <div className={styles.threadsEmpty}>
+            <MessageSquare size={18} style={{ opacity: 0.3 }} />
+            <span>Loading chats...</span>
+          </div>
+        ) : threads.length === 0 ? (
           <div className={styles.threadsEmpty}>
             <MessageSquare size={18} style={{ opacity: 0.3 }} />
             <span>No active chats</span>
           </div>
         ) : (
-          chatThreads.map((thread) => (
+          threads.map((thread) => (
             <Link
               key={thread.dealId}
               href={`/chat/${thread.dealId}`}

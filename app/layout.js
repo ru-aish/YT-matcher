@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }) {
-  const useClerk = !isDevAuthBypassEnabled();
+  const useClerk = process.env.NODE_ENV === 'production' && !isDevAuthBypassEnabled();
   const ClerkProvider = useClerk ? (await import('@clerk/nextjs')).ClerkProvider : null;
 
   return (
