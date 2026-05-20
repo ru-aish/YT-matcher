@@ -1,4 +1,4 @@
-import { getCampaignDetailAction } from '../../../campaign-actions';
+import { getCampaignDetailAction } from '../../../../campaign-actions';
 import { redirect } from 'next/navigation';
 import CampaignDetailClient from './CampaignDetailClient';
 
