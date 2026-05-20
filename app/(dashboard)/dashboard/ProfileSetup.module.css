@@ -1,0 +1,77 @@
+.setup {
+  max-width: 560px;
+  margin: 0 auto;
+  animation: slideUp var(--duration-slow) var(--ease-out) both;
+}
+
+.setupCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+}
+
+.setupHeader {
+  margin-bottom: var(--space-xl);
+}
+
+.setupTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-xs);
+}
+
+.setupSubtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.roleSelector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.roleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+.roleBtn:hover:not(:disabled) {
+  border-color: var(--border-hover);
+}
+
+.roleBtn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.roleBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.submitBtn {
+  margin-top: var(--space-sm);
+}

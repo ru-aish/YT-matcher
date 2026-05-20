@@ -31,6 +31,16 @@ async function upgradeSchema() {
     await sql`ALTER TABLE deals ADD COLUMN IF NOT EXISTS description TEXT;`;
     await sql`ALTER TABLE deals ADD COLUMN IF NOT EXISTS requirements TEXT;`;
 
+    await sql`
+      CREATE TABLE IF NOT EXISTS campaign_interests (
+        id SERIAL PRIMARY KEY,
+        campaign_id INTEGER REFERENCES campaigns(id),
+        creator_id INTEGER REFERENCES users(id),
+        status VARCHAR(50) DEFAULT 'interested',
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `;
+
     console.log('✅ Marketplace schema upgraded successfully.');
   } catch (error) {
     console.error('❌ Marketplace schema upgrade failed:', error);

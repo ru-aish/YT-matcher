@@ -1,0 +1,38 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-void);
+}
+
+.main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding-top: var(--topbar-height);
+  transition: margin-left var(--duration-normal) var(--ease-out);
+  min-width: 0;
+}
+
+.main.sidebarCollapsed {
+  margin-left: var(--sidebar-collapsed);
+}
+
+.content {
+  padding: var(--space-xl) var(--space-2xl);
+  max-width: 1200px;
+  animation: slideUp var(--duration-slow) var(--ease-out) both;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    padding: var(--space-lg) var(--space-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+  }
+  .content {
+    padding: var(--space-md);
+  }
+}
