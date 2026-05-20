@@ -15,17 +15,23 @@ async function upgradeSchema() {
     await sql`
       CREATE TABLE IF NOT EXISTS campaigns (
         id SERIAL PRIMARY KEY,
-        brand_id INTEGER REFERENCES users(id),
+        brand_user_id INTEGER REFERENCES users(id),
         title VARCHAR(255) NOT NULL,
-        description TEXT,
-        requirements TEXT,
-        budget INTEGER DEFAULT 0,
+        target_audience_country VARCHAR(255),
+        budget_min_usd INTEGER DEFAULT 0,
+        budget_max_usd INTEGER DEFAULT 0,
+        required_deliverable VARCHAR(255),
         status VARCHAR(50) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT NOW()
       );
     `;
 
     await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500);`;
+    await sql`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS brand_user_id INTEGER REFERENCES users(id);`;
+    await sql`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS target_audience_country VARCHAR(255);`;
+    await sql`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS budget_min_usd INTEGER DEFAULT 0;`;
+    await sql`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS budget_max_usd INTEGER DEFAULT 0;`;
+    await sql`ALTER TABLE campaigns ADD COLUMN IF NOT EXISTS required_deliverable VARCHAR(255);`;
     await sql`ALTER TABLE deals ADD COLUMN IF NOT EXISTS campaign_id INTEGER REFERENCES campaigns(id);`;
     await sql`ALTER TABLE deals ADD COLUMN IF NOT EXISTS title VARCHAR(255);`;
     await sql`ALTER TABLE deals ADD COLUMN IF NOT EXISTS description TEXT;`;

@@ -106,7 +106,7 @@ export default function ProfileSetup({ initialUser }) {
           <div className="form-group">
             <label className="form-label">Display Name</label>
             <div className="input-wrapper">
-              <User className="input-icon" />
+              <User size={16} className="input-icon" />
               <input
                 type="text"
                 className="input input-with-icon"
@@ -123,7 +123,7 @@ export default function ProfileSetup({ initialUser }) {
             <div className="form-group">
               <label className="form-label">YouTube Channel</label>
               <div className="input-wrapper">
-                <Video className="input-icon" />
+                <Video size={16} className="input-icon" />
                 <input
                   type="text"
                   className="input input-with-icon"
@@ -138,7 +138,7 @@ export default function ProfileSetup({ initialUser }) {
             <div className="form-group">
               <label className="form-label">Company Name</label>
               <div className="input-wrapper">
-                <Building2 className="input-icon" />
+                <Building2 size={16} className="input-icon" />
                 <input
                   type="text"
                   className="input input-with-icon"

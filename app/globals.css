@@ -618,3 +618,49 @@ textarea.input {
   border: none;
   margin: var(--space-md) 0;
 }
+
+/* ── Auth Pages ────────────────────────────────────────── */
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+}
+
+.auth-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.auth-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Extra Button Variants ─────────────────────────────── */
+.btn-cyan {
+  background: rgba(0, 224, 158, 0.12);
+  border: 1px solid rgba(0, 224, 158, 0.25);
+  color: var(--status-success);
+}
+
+.btn-cyan:hover {
+  background: rgba(0, 224, 158, 0.2);
+  box-shadow: 0 0 16px rgba(0, 224, 158, 0.15);
+}
+
+.btn-purple {
+  background: rgba(160, 80, 255, 0.1);
+  border: 1px solid rgba(160, 80, 255, 0.25);
+  color: #c084fc;
+}
+
+.btn-purple:hover {
+  background: rgba(160, 80, 255, 0.18);
+  box-shadow: 0 0 16px rgba(160, 80, 255, 0.15);
+}

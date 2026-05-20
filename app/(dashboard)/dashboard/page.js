@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { getDbUserAction } from '../../actions';
 import BrandDashboard from './BrandDashboard';
 import CreatorDashboard from './CreatorDashboard';
@@ -9,7 +10,7 @@ export default async function DashboardPage() {
   const user = await getDbUserAction();
 
   if (!user) {
-    return null; // Layout handles redirect
+    redirect('/login');
   }
 
   const serializableUser = {

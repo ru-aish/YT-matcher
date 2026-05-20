@@ -12,6 +12,29 @@ async function getCurrentUser() {
   return getDbUserAction();
 }
 
+function normalizeCampaign(row) {
+  if (!row) return row;
+
+  const budgetMinUsd = row.budgetMinUsd ?? row.budget_min_usd ?? row.budget ?? 0;
+  const budgetMaxUsd = row.budgetMaxUsd ?? row.budget_max_usd ?? row.budget ?? budgetMinUsd;
+  const brandId = row.brandUserId ?? row.brand_user_id ?? row.brandId ?? null;
+  const requiredDeliverable = row.requiredDeliverable ?? row.required_deliverable ?? row.requirements ?? row.description ?? null;
+  const targetAudienceCountry = row.targetAudienceCountry ?? row.target_audience_country ?? null;
+
+  return {
+    ...formatDates(row),
+    brandId,
+    brandUserId: brandId,
+    targetAudienceCountry,
+    budgetMinUsd,
+    budgetMaxUsd,
+    budget: budgetMaxUsd || budgetMinUsd || 0,
+    description: row.description ?? requiredDeliverable,
+    requirements: row.requirements ?? requiredDeliverable,
+    requiredDeliverable,
+  };
+}
+
 // ═══════════════════════════════════════════════════════════
 // CAMPAIGN ACTIONS
 // ═══════════════════════════════════════════════════════════
@@ -24,16 +47,21 @@ export async function createCampaignAction({ title, description, requirements, b
     if (user.role !== 'brand') return { error: 'Only brands can create campaigns' };
     if (!title?.trim()) return { error: 'Campaign title is required' };
 
+    const parsedBudget = parseInt(budget, 10);
+    const normalizedBudget = Number.isFinite(parsedBudget) ? parsedBudget : 0;
+    const requiredDeliverable = requirements?.trim() || description?.trim() || null;
+
     const newCampaign = await db.insert(campaigns).values({
-      brandId: user.id,
+      brandUserId: user.id,
       title: title.trim(),
-      description: description?.trim() || null,
-      requirements: requirements?.trim() || null,
-      budget: parseInt(budget) || 0,
+      targetAudienceCountry: null,
+      budgetMinUsd: normalizedBudget,
+      budgetMaxUsd: normalizedBudget,
+      requiredDeliverable,
       status: 'active',
     }).returning();
 
-    return { success: true, campaign: formatDates(newCampaign[0]) };
+    return { success: true, campaign: normalizeCampaign(newCampaign[0]) };
   } catch (error) {
     console.error('Error creating campaign:', error);
     return { error: 'Failed to create campaign' };
@@ -49,7 +77,7 @@ export async function getCampaignsAction() {
 
     const result = await db.select()
       .from(campaigns)
-      .where(eq(campaigns.brandId, user.id))
+      .where(eq(campaigns.brandUserId, user.id))
       .orderBy(desc(campaigns.createdAt));
 
     // For each campaign, get counts of interests and deals
@@ -68,7 +96,7 @@ export async function getCampaignsAction() {
         .where(eq(deals.campaignId, campaign.id));
 
       return {
-        ...formatDates(campaign),
+        ...normalizeCampaign(campaign),
         interestCount: interests.length,
         dealCount: campaignDeals.length,
       };
@@ -88,22 +116,26 @@ export async function updateCampaignAction(campaignId, data) {
     if (!user) return { error: 'Not authenticated' };
 
     const existing = await db.select().from(campaigns)
-      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandId, user.id)))
+      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandUserId, user.id)))
       .limit(1);
     if (existing.length === 0) return { error: 'Campaign not found' };
+
+    const parsedBudget = data.budget !== undefined ? parseInt(data.budget, 10) : undefined;
+    const normalizedBudget = Number.isFinite(parsedBudget) ? parsedBudget : existing[0].budgetMaxUsd || existing[0].budgetMinUsd || 0;
 
     const updated = await db.update(campaigns)
       .set({
         title: data.title?.trim() || existing[0].title,
-        description: data.description?.trim() ?? existing[0].description,
-        requirements: data.requirements?.trim() ?? existing[0].requirements,
-        budget: data.budget !== undefined ? parseInt(data.budget) : existing[0].budget,
+        targetAudienceCountry: data.targetAudienceCountry?.trim() ?? existing[0].targetAudienceCountry ?? null,
+        budgetMinUsd: normalizedBudget,
+        budgetMaxUsd: normalizedBudget,
+        requiredDeliverable: data.requirements?.trim() ?? data.description?.trim() ?? existing[0].requiredDeliverable,
         status: data.status || existing[0].status,
       })
       .where(eq(campaigns.id, parseInt(campaignId)))
       .returning();
 
-    return { success: true, campaign: formatDates(updated[0]) };
+    return { success: true, campaign: normalizeCampaign(updated[0]) };
   } catch (error) {
     console.error('Error updating campaign:', error);
     return { error: 'Failed to update campaign' };
@@ -117,7 +149,7 @@ export async function deleteCampaignAction(campaignId) {
     if (!user) return { error: 'Not authenticated' };
 
     const existing = await db.select().from(campaigns)
-      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandId, user.id)))
+      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandUserId, user.id)))
       .limit(1);
     if (existing.length === 0) return { error: 'Campaign not found' };
 
@@ -160,7 +192,7 @@ export async function getCampaignDetailAction(campaignId) {
     const campaign = result[0];
 
     // Check access: brand owner or creator with interest/deal
-    if (user.role === 'brand' && campaign.brandId !== user.id) {
+    if (user.role === 'brand' && campaign.brandUserId !== user.id) {
       return { error: 'Unauthorized' };
     }
 
@@ -197,12 +229,12 @@ export async function getCampaignDetailAction(campaignId) {
 
     // Get brand info
     const brandResult = await db.select().from(users)
-      .where(eq(users.id, campaign.brandId))
+      .where(eq(users.id, campaign.brandUserId))
       .limit(1);
 
     return {
       success: true,
-      campaign: formatDates(campaign),
+      campaign: normalizeCampaign(campaign),
       brand: brandResult[0] ? formatDates(brandResult[0]) : null,
       interests: enrichedInterests,
       deals: enrichedDeals,
@@ -233,7 +265,7 @@ export async function getAvailableCampaignsAction() {
     // Enrich with brand info and whether this creator has already expressed interest
     const enriched = await Promise.all(activeCampaigns.map(async (campaign) => {
       const brandResult = await db.select().from(users)
-        .where(eq(users.id, campaign.brandId))
+        .where(eq(users.id, campaign.brandUserId))
         .limit(1);
 
       const existingInterest = await db.select().from(campaignInterests)
@@ -244,7 +276,7 @@ export async function getAvailableCampaignsAction() {
         .limit(1);
 
       return {
-        ...formatDates(campaign),
+        ...normalizeCampaign(campaign),
         brand: brandResult[0] ? { name: brandResult[0].name, companyName: brandResult[0].companyName, avatarUrl: brandResult[0].avatarUrl } : null,
         myInterest: existingInterest[0] ? formatDates(existingInterest[0]) : null,
       };
@@ -304,7 +336,7 @@ export async function acceptCreatorAction(campaignId, creatorId) {
 
     // Verify campaign ownership
     const campaign = await db.select().from(campaigns)
-      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandId, user.id)))
+      .where(and(eq(campaigns.id, parseInt(campaignId)), eq(campaigns.brandUserId, user.id)))
       .limit(1);
     if (campaign.length === 0) return { error: 'Campaign not found' };
 
@@ -335,10 +367,10 @@ export async function acceptCreatorAction(campaignId, creatorId) {
       creatorId: parseInt(creatorId),
       campaignId: parseInt(campaignId),
       title: campaign[0].title,
-      description: campaign[0].description,
-      requirements: campaign[0].requirements,
+      description: campaign[0].requiredDeliverable,
+      requirements: campaign[0].requiredDeliverable,
       status: 'pending',
-      price: campaign[0].budget,
+      price: campaign[0].budgetMaxUsd || campaign[0].budgetMinUsd || 0,
     }).returning();
 
     return { success: true, dealId: newDeal[0].id };
@@ -361,7 +393,7 @@ export async function rejectInterestAction(interestId) {
 
     // Verify the campaign belongs to this brand
     const campaign = await db.select().from(campaigns)
-      .where(and(eq(campaigns.id, interest[0].campaignId), eq(campaigns.brandId, user.id)))
+      .where(and(eq(campaigns.id, interest[0].campaignId), eq(campaigns.brandUserId, user.id)))
       .limit(1);
     if (campaign.length === 0) return { error: 'Unauthorized' };
 

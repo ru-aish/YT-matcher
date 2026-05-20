@@ -18,7 +18,7 @@
 }
 
 /* ── Logo ── */
-.sidebar-header {
+.sidebarHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,14 +28,14 @@
   flex-shrink: 0;
 }
 
-.sidebar-logo {
+.sidebarLogo {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   overflow: hidden;
 }
 
-.sidebar-logo-icon {
+.sidebarLogoIcon {
   width: 28px;
   height: 28px;
   background: var(--accent);
@@ -50,7 +50,7 @@
   color: #000;
 }
 
-.sidebar-logo-text {
+.sidebarLogoText {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
@@ -61,12 +61,12 @@
   transition: opacity var(--duration-fast);
 }
 
-.collapsed .sidebar-logo-text {
+.collapsed .sidebarLogoText {
   opacity: 0;
   width: 0;
 }
 
-.sidebar-toggle {
+.sidebarToggle {
   width: 28px;
   height: 28px;
   display: flex;
@@ -78,17 +78,17 @@
   flex-shrink: 0;
 }
 
-.sidebar-toggle:hover {
+.sidebarToggle:hover {
   color: var(--text-primary);
   background: rgba(255, 255, 255, 0.05);
 }
 
-.collapsed .sidebar-toggle {
+.collapsed .sidebarToggle {
   margin: 0 auto;
 }
 
 /* ── Navigation ── */
-.sidebar-nav {
+.sidebarNav {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -96,7 +96,7 @@
   flex-shrink: 0;
 }
 
-.nav-link {
+.navLink {
   display: flex;
   align-items: center;
   gap: var(--space-md);
@@ -112,17 +112,17 @@
   position: relative;
 }
 
-.nav-link:hover {
+.navLink:hover {
   color: var(--text-primary);
   background: rgba(255, 255, 255, 0.04);
 }
 
-.nav-link.active {
+.navLink.active {
   color: var(--accent);
   background: var(--accent-glow);
 }
 
-.nav-link.active::before {
+.navLink.active::before {
   content: '';
   position: absolute;
   left: 0;
@@ -134,7 +134,7 @@
   border-radius: 0 2px 2px 0;
 }
 
-.nav-link-icon {
+.navLinkIcon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
@@ -143,34 +143,34 @@
   justify-content: center;
 }
 
-.nav-link-label {
+.navLinkLabel {
   opacity: 1;
   transition: opacity var(--duration-fast);
 }
 
-.collapsed .nav-link-label {
+.collapsed .navLinkLabel {
   opacity: 0;
   width: 0;
 }
 
-.collapsed .nav-link {
+.collapsed .navLink {
   justify-content: center;
   padding: 0.6rem;
 }
 
-.collapsed .nav-link.active::before {
+.collapsed .navLink.active::before {
   left: 0;
 }
 
 /* ── Divider ── */
-.sidebar-divider {
+.sidebarDivider {
   height: 1px;
   background: var(--border);
   margin: var(--space-sm) var(--space-lg);
   flex-shrink: 0;
 }
 
-.sidebar-section-label {
+.sidebarSectionLabel {
   padding: var(--space-sm) var(--space-lg);
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -182,12 +182,12 @@
   overflow: hidden;
 }
 
-.collapsed .sidebar-section-label {
+.collapsed .sidebarSectionLabel {
   opacity: 0;
 }
 
 /* ── Chat Threads ── */
-.sidebar-threads {
+.sidebarThreads {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -197,7 +197,7 @@
   gap: 2px;
 }
 
-.thread-item {
+.threadItem {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -210,15 +210,15 @@
   color: inherit;
 }
 
-.thread-item:hover {
+.threadItem:hover {
   background: rgba(255, 255, 255, 0.04);
 }
 
-.thread-item.active {
+.threadItem.active {
   background: var(--accent-glow);
 }
 
-.thread-avatar {
+.threadAvatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -235,19 +235,19 @@
   overflow: hidden;
 }
 
-.thread-avatar img {
+.threadAvatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.thread-info {
+.threadInfo {
   min-width: 0;
   flex: 1;
   overflow: hidden;
 }
 
-.thread-name {
+.threadName {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -256,7 +256,7 @@
   white-space: nowrap;
 }
 
-.thread-preview {
+.threadPreview {
   font-size: 0.7rem;
   color: var(--text-muted);
   overflow: hidden;
@@ -265,7 +265,7 @@
   margin-top: 1px;
 }
 
-.thread-unread {
+.threadUnread {
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -274,19 +274,19 @@
   box-shadow: 0 0 6px var(--accent-glow-strong);
 }
 
-.collapsed .thread-info,
-.collapsed .thread-unread {
+.collapsed .threadInfo,
+.collapsed .threadUnread {
   display: none;
 }
 
 /* ── Sidebar Footer ── */
-.sidebar-footer {
+.sidebarFooter {
   border-top: 1px solid var(--border);
   padding: var(--space-md) var(--space-sm);
   flex-shrink: 0;
 }
 
-.sidebar-footer-user {
+.sidebarFooterUser {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -295,12 +295,12 @@
   overflow: hidden;
 }
 
-.sidebar-footer-info {
+.sidebarFooterInfo {
   min-width: 0;
   flex: 1;
 }
 
-.sidebar-footer-name {
+.sidebarFooterName {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -309,7 +309,7 @@
   white-space: nowrap;
 }
 
-.sidebar-footer-role {
+.sidebarFooterRole {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--text-muted);
@@ -317,16 +317,16 @@
   letter-spacing: 0.05em;
 }
 
-.collapsed .sidebar-footer-info {
+.collapsed .sidebarFooterInfo {
   display: none;
 }
 
-.collapsed .sidebar-footer-user {
+.collapsed .sidebarFooterUser {
   justify-content: center;
 }
 
 /* ── Empty state for threads ── */
-.threads-empty {
+.threadsEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -338,6 +338,6 @@
   gap: var(--space-sm);
 }
 
-.collapsed .threads-empty {
+.collapsed .threadsEmpty {
   display: none;
 }

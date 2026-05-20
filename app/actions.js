@@ -1,7 +1,7 @@
 'use server';
 
 import { db, users, deals, messages } from '../lib/db';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, or } from 'drizzle-orm';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { getDevAuthBypassEmail, getDevAuthBypassRole, isDevAuthBypassEnabled } from '../lib/dev-auth';
 import { sendUnreadMessageEmail } from '../lib/email';
@@ -10,23 +10,34 @@ import { getPusherServer } from '../lib/pusher';
 // Get current database user synced with Clerk, or bypassed for local development/testing
 export async function getDbUserAction() {
   try {
-    let userId = null;
-
     if (isDevAuthBypassEnabled()) {
       const { cookies } = await import('next/headers');
       const cookieStore = await cookies();
-      userId = cookieStore.get('dev_user_id')?.value || getDevAuthBypassEmail();
+      const email = cookieStore.get('dev_user_email')?.value || getDevAuthBypassEmail();
+      const role = cookieStore.get('dev_user_role')?.value || getDevAuthBypassRole() || 'creator';
+      const name = email.split('@')[0];
+
+      return {
+        id: -1,
+        email,
+        role,
+        name,
+        avatarUrl: null,
+        googleId: cookieStore.get('dev_user_id')?.value || email,
+        profileCompleted: true,
+        bio: null,
+        youtubeChannel: role === 'creator' ? '' : null,
+        companyName: role === 'brand' ? '' : null,
+        createdAt: new Date(),
+      };
     }
 
-    if (!userId) {
-      const authObj = await auth();
-      userId = authObj.userId;
-    }
-    
+    const authObj = await auth();
+    const userId = authObj.userId;
     if (!userId) return null;
 
     // Check by googleId (which holds Clerk's userId)
-    let result = await db.select().from(users).where(eq(users.googleId, userId)).limit(1);
+    const result = await db.select().from(users).where(eq(users.googleId, userId)).limit(1);
     
     if (result.length > 0) {
       return result[0];
@@ -35,6 +46,22 @@ export async function getDbUserAction() {
     return null;
   } catch (error) {
     console.error("Error getting database user:", error);
+    if (isDevAuthBypassEnabled()) {
+      return {
+        id: -1,
+        email: getDevAuthBypassEmail(),
+        role: getDevAuthBypassRole() || 'creator',
+        name: getDevAuthBypassEmail().split('@')[0],
+        avatarUrl: null,
+        googleId: getDevAuthBypassEmail(),
+        profileCompleted: true,
+        bio: null,
+        youtubeChannel: '',
+        companyName: '',
+        createdAt: new Date(),
+      };
+    }
+
     return null;
   }
 }
@@ -71,10 +98,37 @@ export async function createDbUserAction(role) {
 
     if (!userId) return { error: "Not authenticated" };
 
-    // Check if user already exists
-    let result = await db.select().from(users).where(eq(users.googleId, userId)).limit(1);
-    if (result.length > 0) {
-      return { success: true, user: result[0] };
+    // Check if user already exists by Clerk/google id or email.
+    const existingResult = await db.select().from(users)
+      .where(or(eq(users.googleId, userId), eq(users.email, email)))
+      .limit(1);
+
+    if (existingResult.length > 0) {
+      const existing = existingResult[0];
+      const nextRole = role || existing.role || 'creator';
+      const needsUpdate =
+        existing.googleId !== userId ||
+        (email && existing.email !== email) ||
+        existing.name !== name ||
+        existing.role !== nextRole ||
+        (avatarUrl && existing.avatarUrl !== avatarUrl);
+
+      if (needsUpdate) {
+        const updated = await db.update(users)
+          .set({
+            email: email || existing.email,
+            name: name || existing.name,
+            role: nextRole,
+            avatarUrl: avatarUrl || existing.avatarUrl || null,
+            googleId: userId,
+          })
+          .where(eq(users.id, existing.id))
+          .returning();
+
+        return { success: true, user: updated[0] };
+      }
+
+      return { success: true, user: existing };
     }
 
     const newDbUser = await db.insert(users).values({

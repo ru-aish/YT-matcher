@@ -1,12 +1,27 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
-import { UserButton } from '@clerk/nextjs';
 import { Bell } from 'lucide-react';
+import { UserButton } from '@clerk/nextjs';
+import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
 import styles from './Topbar.module.css';
 
+function ClerkMenu() {
+  return (
+    <UserButton
+      appearance={{
+        elements: {
+          avatarBox: {
+            width: 30,
+            height: 30,
+          }
+        }
+      }}
+    />
+  );
+}
+
 export default function Topbar({ sidebarCollapsed, dbUser, title, breadcrumbs }) {
-  const { user: clerkUser } = useUser();
+  const isDevBypass = isDevAuthBypassEnabled();
   const role = dbUser?.role || 'user';
 
   return (
@@ -35,16 +50,13 @@ export default function Topbar({ sidebarCollapsed, dbUser, title, breadcrumbs })
         <button className={styles.topbarAction} title="Notifications">
           <Bell size={17} />
         </button>
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: {
-                width: 30,
-                height: 30,
-              }
-            }
-          }}
-        />
+        {isDevBypass ? (
+          <button className={styles.topbarAction} title={dbUser?.name || 'User'}>
+            {(dbUser?.name || 'U').slice(0, 1).toUpperCase()}
+          </button>
+        ) : (
+          <ClerkMenu />
+        )}
       </div>
     </header>
   );

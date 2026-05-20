@@ -1,14 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { SignIn } from '@clerk/nextjs';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { Building2, Video } from 'lucide-react';
+import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
 import styles from './login.module.css';
+
+const SignIn = dynamic(() => import('@clerk/nextjs').then((mod) => mod.SignIn), {
+  ssr: false,
+});
 
 export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState(null);
+  const isDevBypass = isDevAuthBypassEnabled();
 
   const handleRoleSelect = (role) => {
+    if (isDevBypass) return;
     setSelectedRole(role);
     // Set cookie for role so dashboard knows what role to create
     document.cookie = `selected_role=${role}; path=/; max-age=3600`;
@@ -34,7 +42,28 @@ export default function LoginPage() {
         </div>
 
         {/* Role Selection */}
-        {!selectedRole ? (
+        {isDevBypass ? (
+          <div className={styles.roleCards}>
+            <Link className={styles.roleCard} href="/test-bypass?role=brand&redirect=/dashboard">
+              <div className={styles.roleCardIcon}>
+                <Building2 size={24} />
+              </div>
+              <span className={styles.roleCardLabel}>Brand</span>
+              <span className={styles.roleCardDesc}>
+                Enter the dashboard as a brand
+              </span>
+            </Link>
+            <Link className={styles.roleCard} href="/test-bypass?role=creator&redirect=/dashboard">
+              <div className={styles.roleCardIcon}>
+                <Video size={24} />
+              </div>
+              <span className={styles.roleCardLabel}>Creator</span>
+              <span className={styles.roleCardDesc}>
+                Enter the dashboard as a creator
+              </span>
+            </Link>
+          </div>
+        ) : !selectedRole ? (
           <div className={styles.roleCards}>
             <button
               className={`${styles.roleCard} ${selectedRole === 'brand' ? styles.selected : ''}`}

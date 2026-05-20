@@ -1,8 +1,13 @@
 import { SignUp } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
 
 export default async function SignUpPage() {
+  if (isDevAuthBypassEnabled()) {
+    redirect('/dashboard');
+  }
+
+  const { auth } = await import('@clerk/nextjs/server');
   const { userId } = await auth();
   if (userId) {
     redirect('/dashboard');

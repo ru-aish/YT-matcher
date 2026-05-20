@@ -19,6 +19,7 @@
 .content {
   padding: var(--space-xl) var(--space-2xl);
   max-width: 1200px;
+  margin: 0 auto;
   animation: slideUp var(--duration-slow) var(--ease-out) both;
 }
 

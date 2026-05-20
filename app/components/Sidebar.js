@@ -11,12 +11,53 @@ import {
   PanelLeft,
   LogOut,
 } from 'lucide-react';
+import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
 import styles from './Sidebar.module.css';
+
+function getInitials(name) {
+  if (!name) return '?';
+  return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function ClerkFooter({ dbUser, handleLogout }) {
+  const { signOut } = useClerk();
+  const { user: clerkUser } = useUser();
+
+  const avatarUrl = clerkUser?.imageUrl || dbUser?.avatarUrl;
+  const displayName = dbUser?.name || clerkUser?.fullName || 'User';
+  const role = dbUser?.role || 'user';
+
+  return (
+    <div className={styles.sidebarFooterUser}>
+      <div className={styles.threadAvatar}>
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="" />
+        ) : (
+          getInitials(displayName)
+        )}
+      </div>
+      <div className={styles.sidebarFooterInfo}>
+        <div className={styles.sidebarFooterName}>{displayName}</div>
+        <div className={styles.sidebarFooterRole}>{role}</div>
+      </div>
+      <button
+        className={styles.sidebarToggle}
+        onClick={async () => {
+          await signOut();
+          handleLogout();
+        }}
+        title="Sign out"
+        style={{ marginLeft: 'auto' }}
+      >
+        <LogOut size={14} />
+      </button>
+    </div>
+  );
+}
 
 export default function Sidebar({ chatThreads = [], dbUser, collapsed, onToggle }) {
   const pathname = usePathname();
-  const { signOut } = useClerk();
-  const { user: clerkUser } = useUser();
+  const isDevBypass = isDevAuthBypassEnabled();
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -34,19 +75,9 @@ export default function Sidebar({ chatThreads = [], dbUser, collapsed, onToggle 
     return pathname === `/chat/${dealId}`;
   };
 
-  const getInitials = (name) => {
-    if (!name) return '?';
-    return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  };
-
   const handleLogout = async () => {
-    await signOut();
     window.location.href = '/login';
   };
-
-  const avatarUrl = clerkUser?.imageUrl || dbUser?.avatarUrl;
-  const displayName = dbUser?.name || clerkUser?.fullName || 'User';
-  const role = dbUser?.role || 'user';
 
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
@@ -125,27 +156,31 @@ export default function Sidebar({ chatThreads = [], dbUser, collapsed, onToggle 
 
       {/* Footer */}
       <div className={styles.sidebarFooter}>
-        <div className={styles.sidebarFooterUser}>
-          <div className={styles.threadAvatar}>
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="" />
-            ) : (
-              getInitials(displayName)
-            )}
+        {isDevBypass ? (
+          <div className={styles.sidebarFooterUser}>
+            <div className={styles.threadAvatar}>
+              {dbUser?.avatarUrl ? (
+                <img src={dbUser.avatarUrl} alt="" />
+              ) : (
+                getInitials(dbUser?.name || 'User')
+              )}
+            </div>
+            <div className={styles.sidebarFooterInfo}>
+              <div className={styles.sidebarFooterName}>{dbUser?.name || 'User'}</div>
+              <div className={styles.sidebarFooterRole}>{dbUser?.role || 'user'}</div>
+            </div>
+            <button
+              className={styles.sidebarToggle}
+              onClick={handleLogout}
+              title="Sign out"
+              style={{ marginLeft: 'auto' }}
+            >
+              <LogOut size={14} />
+            </button>
           </div>
-          <div className={styles.sidebarFooterInfo}>
-            <div className={styles.sidebarFooterName}>{displayName}</div>
-            <div className={styles.sidebarFooterRole}>{role}</div>
-          </div>
-          <button
-            className={styles.sidebarToggle}
-            onClick={handleLogout}
-            title="Sign out"
-            style={{ marginLeft: 'auto' }}
-          >
-            <LogOut size={14} />
-          </button>
-        </div>
+        ) : (
+          <ClerkFooter dbUser={dbUser} handleLogout={handleLogout} />
+        )}
       </div>
     </aside>
   );

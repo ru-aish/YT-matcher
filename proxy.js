@@ -1,6 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import { isDevAuthBypassEnabled } from './lib/dev-auth';
+
+const isDevAuthBypassEnabled =
+  process.env.DEV_AUTH_BYPASS === 'true' || process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -9,18 +11,19 @@ const isPublicRoute = createRouteMatcher([
   '/test-bypass(.*)',
 ]);
 
-export default clerkMiddleware(async (auth, request) => {
-  if (isDevAuthBypassEnabled()) {
-    return NextResponse.next();
-  }
+const proxy = isDevAuthBypassEnabled
+  ? function proxy() {
+      return NextResponse.next();
+    }
+  : clerkMiddleware(async (auth, request) => {
+      if (isPublicRoute(request)) {
+        return NextResponse.next();
+      }
 
-  if (isPublicRoute(request)) {
-    return NextResponse.next();
-  }
+      return auth.protect();
+    });
 
-  return auth.protect();
-});
-
+export default proxy;
 export const config = {
   matcher: ['/((?!_next|.*\\..*).*)'],
 };

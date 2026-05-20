@@ -1,8 +1,13 @@
 import Link from 'next/link';
-import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { isDevAuthBypassEnabled } from '../../lib/dev-auth';
 
 export default async function AuthCallbackPage({ searchParams }) {
+  if (isDevAuthBypassEnabled()) {
+    redirect('/dashboard');
+  }
+
+  const { auth } = await import('@clerk/nextjs/server');
   const { userId } = await auth();
   if (!userId) {
     redirect('/login');
