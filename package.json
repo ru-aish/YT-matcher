@@ -7,8 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "node --check app/actions.js && node --check app/dashboard/DashboardClient.js && node --check app/dashboard/page.js && node --check app/deal/[id]/DealClient.js && node --check app/deal/[id]/page.js && node --check app/layout.js && node --check app/page.js && node --check app/test-bypass/route.js && node --check lib/db.js && node --check lib/dev-auth.js && node --check lib/email.js && node --check lib/schema.js && node --check proxy.js && node --check scripts/create-test-deal.js && node --check scripts/db-add-chat-tables.js && node --check scripts/seed-test-users.js && node --check scripts/test-websocket.js",
+    "lint": "node --check app/actions.js && node --check app/auth-callback/page.js && node --check app/dashboard/DashboardClient.js && node --check app/dashboard/page.js && node --check app/deal/[id]/DealClient.js && node --check app/deal/[id]/page.js && node --check app/layout.js && node --check app/login/page.js && node --check app/page.js && node --check app/signup/page.js && node --check app/test-bypass/route.js && node --check lib/db.js && node --check lib/dev-auth.js && node --check lib/email.js && node --check lib/pusher.js && node --check lib/schema.js && node --check proxy.js && node --check scripts/create-test-deal.js && node --check scripts/db-add-chat-tables.js && node --check scripts/db-add-marketplace-schema.js && node --check scripts/seed-test-users.js && node --check scripts/test-websocket.js",
     "db:chat": "node scripts/db-add-chat-tables.js",
+    "db:schema": "node scripts/db-add-marketplace-schema.js",
     "seed:chat-test-users": "node scripts/seed-test-users.js",
     "seed:chat-test-deal": "node scripts/create-test-deal.js",
     "test:chat": "node scripts/test-websocket.js"

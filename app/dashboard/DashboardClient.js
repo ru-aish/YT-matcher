@@ -53,7 +53,7 @@ export default function DashboardClient({ initialUser }) {
       setLoadingData(true);
       setError('');
       try {
-        if (user.role === 'brand') {
+        if (user.role === 'brand' && process.env.NODE_ENV === 'development') {
           // Attempt seeding mock creators in local dev automatically
           await seedMockCreatorsAction();
           const creatorsRes = await getCreatorsAction();

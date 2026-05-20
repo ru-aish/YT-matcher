@@ -13,18 +13,20 @@ export default async function DealPage({ params, searchParams }) {
 
   const cookieStore = await cookies();
   const isDevBypass = process.env.DEV_AUTH_BYPASS === 'true' || process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
+  let userIdentifier = null;
 
   if (!isDevBypass) {
     const authObj = await auth();
     if (!authObj.userId) {
       redirect('/login');
     }
+    userIdentifier = authObj.userId;
+  } else {
+    userIdentifier =
+      resolvedSearchParams?.dev_user_id ||
+      cookieStore.get('dev_user_id')?.value ||
+      null;
   }
-
-  const userIdentifier =
-    resolvedSearchParams?.dev_user_id ||
-    cookieStore.get('dev_user_id')?.value ||
-    null;
 
   const res = await getDealActionForUser(dealId, userIdentifier);
 

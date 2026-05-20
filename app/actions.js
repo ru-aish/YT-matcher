@@ -3,15 +3,9 @@
 import { db, users, deals, messages } from '../lib/db';
 import { eq, and } from 'drizzle-orm';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import Pusher from 'pusher';
 import { getDevAuthBypassEmail, getDevAuthBypassRole, isDevAuthBypassEnabled } from '../lib/dev-auth';
 import { sendUnreadMessageEmail } from '../lib/email';
-
-// Helper to clean environment variables (removing potential quotes/spaces)
-const cleanEnvVar = (val) => {
-  if (!val) return val;
-  return val.replace(/['"]/g, '').trim();
-};
+import { getPusherServer } from '../lib/pusher';
 
 // Get current database user synced with Clerk, or bypassed for local development/testing
 export async function getDbUserAction() {
@@ -51,6 +45,7 @@ export async function createDbUserAction(role) {
     let userId = null;
     let email = '';
     let name = '';
+    let avatarUrl = null;
 
     if (isDevAuthBypassEnabled()) {
       const { cookies } = await import('next/headers');
@@ -58,6 +53,7 @@ export async function createDbUserAction(role) {
       userId = cookieStore.get('dev_user_id')?.value || getDevAuthBypassEmail();
       email = cookieStore.get('dev_user_email')?.value || getDevAuthBypassEmail();
       name = email.split('@')[0];
+      role = role || getDevAuthBypassRole() || 'creator';
     }
     
     if (!userId) {
@@ -68,6 +64,7 @@ export async function createDbUserAction(role) {
         if (clerkUser) {
           email = clerkUser.emailAddresses[0]?.emailAddress || '';
           name = clerkUser.fullName || email.split('@')[0];
+          avatarUrl = clerkUser.imageUrl || null;
         }
       }
     }
@@ -84,6 +81,7 @@ export async function createDbUserAction(role) {
       email,
       name,
       role: role || 'creator',
+      avatarUrl,
       profileCompleted: false,
       googleId: userId,
     }).returning();
@@ -103,13 +101,20 @@ export async function updateProfileAction(profileData) {
       return { error: "Not authenticated" };
     }
 
+    const effectiveRole = user.profileCompleted ? user.role : profileData.role;
+
+    if (user.profileCompleted && profileData.role && profileData.role !== user.role) {
+      return { error: "Role cannot be changed after profile completion" };
+    }
+
     const result = await db.update(users)
       .set({
         name: profileData.name,
         bio: profileData.bio,
-        role: profileData.role,
-        youtubeChannel: profileData.role === 'creator' ? profileData.youtubeChannel : null,
-        companyName: profileData.role === 'brand' ? profileData.companyName : null,
+        role: effectiveRole,
+        youtubeChannel: effectiveRole === 'creator' ? profileData.youtubeChannel : null,
+        companyName: effectiveRole === 'brand' ? profileData.companyName : null,
+        avatarUrl: profileData.avatarUrl || user.avatarUrl || null,
         profileCompleted: true
       })
       .where(eq(users.id, user.id))
@@ -125,6 +130,10 @@ export async function updateProfileAction(profileData) {
 // Seed mock creators for Brand Discovery
 export async function seedMockCreatorsAction() {
   try {
+    if (process.env.NODE_ENV !== 'development') {
+      return { success: true, message: "Mock creator seeding is disabled outside development" };
+    }
+
     const existingCreators = await db.select().from(users).where(eq(users.role, 'creator')).limit(1);
     
     // Only seed if there are no creators
@@ -356,12 +365,8 @@ export async function sendMessageAction(dealId, content, senderIdentifier = null
       return { error: "Message cannot be empty" };
     }
 
-    const pusherAppId = cleanEnvVar(process.env.PUSHER_APP_ID || process.env.app_id);
-    const pusherKey = cleanEnvVar(process.env.PUSHER_KEY || process.env.key);
-    const pusherSecret = cleanEnvVar(process.env.PUSHER_SECRET || process.env.secret);
-    const pusherCluster = cleanEnvVar(process.env.PUSHER_CLUSTER || process.env.cluster);
-
-    if (!pusherAppId || !pusherKey || !pusherSecret || !pusherCluster) {
+    const pusher = getPusherServer();
+    if (!pusher) {
       return { error: "Realtime messaging is not configured. Message was not sent." };
     }
 
@@ -378,14 +383,6 @@ export async function sendMessageAction(dealId, content, senderIdentifier = null
       senderId: user.id,
       content: trimmedContent,
     }).returning();
-
-    const pusher = new Pusher({
-      appId: pusherAppId,
-      key: pusherKey,
-      secret: pusherSecret,
-      cluster: pusherCluster,
-      useTLS: true
-    });
 
     await pusher.trigger(`deal-${dealId}`, 'new-message', {
       id: newMessage[0].id,
@@ -447,21 +444,9 @@ export async function updateDealStatusAction(dealId, status, senderIdentifier = 
       .returning();
 
     // Trigger Pusher WebSocket status update
-    const pusherAppId = cleanEnvVar(process.env.PUSHER_APP_ID || process.env.app_id);
-    const pusherKey = cleanEnvVar(process.env.PUSHER_KEY || process.env.key);
-    const pusherSecret = cleanEnvVar(process.env.PUSHER_SECRET || process.env.secret);
-    const pusherCluster = cleanEnvVar(process.env.PUSHER_CLUSTER || process.env.cluster);
-
-    if (pusherAppId && pusherKey && pusherSecret && pusherCluster) {
+    const pusher = getPusherServer();
+    if (pusher) {
       try {
-        const pusher = new Pusher({
-          appId: pusherAppId,
-          key: pusherKey,
-          secret: pusherSecret,
-          cluster: pusherCluster,
-          useTLS: true
-        });
-
         await pusher.trigger(`deal-${dealId}`, 'status-updated', {
           dealId: parseInt(dealId),
           status

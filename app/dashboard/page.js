@@ -24,7 +24,7 @@ export default async function DashboardPage({ searchParams }) {
 
   if (!user) {
     if (isDevBypass) {
-      const selectedRole = cookieStore.get('dev_user_role')?.value || 'creator';
+      const selectedRole = resolvedSearchParams.role || cookieStore.get('dev_user_role')?.value || 'creator';
       const res = await createDbUserAction(selectedRole);
       if (res.success) {
         user = res.user;
@@ -32,7 +32,7 @@ export default async function DashboardPage({ searchParams }) {
         redirect('/login?error=db_creation_failed');
       }
     } else if (flow === 'signup') {
-      const selectedRole = cookieStore.get('selected_role')?.value || 'creator';
+      const selectedRole = resolvedSearchParams.role || cookieStore.get('selected_role')?.value || 'creator';
       const res = await createDbUserAction(selectedRole);
       if (res.success) {
         user = res.user;
