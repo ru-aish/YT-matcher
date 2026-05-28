@@ -36,7 +36,6 @@ export default function CampaignDetailClient({ data }) {
   const isBrand = currentUser?.role === 'brand';
   const pendingInterests = interests.filter(i => i.status === 'interested');
   const acceptedInterests = interests.filter(i => i.status === 'accepted');
-
   const handleAccept = async (creatorId) => {
     setLoading(`accept-${creatorId}`);
     setError('');
@@ -48,6 +47,22 @@ export default function CampaignDetailClient({ data }) {
         setInterests(prev => prev.map(i =>
           i.creator?.id === creatorId ? { ...i, status: 'accepted' } : i
         ));
+        // Find the creator profile to append to deals
+        const creatorInterest = interests.find(i => i.creator?.id === creatorId);
+        const creatorObj = creatorInterest?.creator || null;
+        const newDeal = {
+          id: res.dealId,
+          campaignId: campaign.id,
+          brandId: currentUser.id,
+          creatorId: creatorId,
+          title: campaign.title,
+          description: campaign.description || campaign.requiredDeliverable,
+          requirements: campaign.requirements || campaign.requiredDeliverable,
+          status: 'pending',
+          price: campaign.budgetMaxUsd || campaign.budgetMinUsd || campaign.budget || 0,
+          creator: creatorObj,
+        };
+        setDeals(prev => [newDeal, ...prev]);
       } else {
         setError(res.error);
       }

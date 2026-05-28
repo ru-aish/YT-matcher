@@ -175,7 +175,15 @@ export default function CreatorDashboard({ initialUser }) {
               return (
                 <div key={campaign.id} className={styles.campaignCard} style={{ cursor: 'default' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <h3 className={styles.campaignCardTitle}>{campaign.title}</h3>
+                    <h3 
+                      className={styles.campaignCardTitle}
+                      style={{ cursor: 'pointer', color: 'var(--accent)', textDecoration: 'underline', textDecorationColor: 'transparent', transition: 'text-decoration-color var(--duration-fast)' }}
+                      onClick={() => router.push(`/dashboard/campaign/${campaign.id}`)}
+                      onMouseEnter={(e) => e.currentTarget.style.textDecorationColor = 'var(--accent)'}
+                      onMouseLeave={(e) => e.currentTarget.style.textDecorationColor = 'transparent'}
+                    >
+                      {campaign.title}
+                    </h3>
                     {hasInterest && (
                       <span className={`badge ${
                         isAccepted ? 'badge-success' :
