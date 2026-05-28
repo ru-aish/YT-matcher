@@ -44,7 +44,7 @@ const clerkAppearance = {
 
 export default function SignUpPage() {
   const [selectedRole, setSelectedRole] = useState(null);
-  const isDevBypass = isDevAuthBypassEnabled();
+  const isDevBypass = isDevAuthBypassEnabled() || !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   const router = useRouter();
 
   // Check dev bypass immediately
