@@ -395,7 +395,7 @@
 /* Input Fields */
 .clerkContainer :global(.cl-formFieldInput),
 .clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput)) {
-  background-color: #1e1e24 !important;
+  background-color: #222222 !important;
   border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   border-radius: 10px !important;
   color: var(--text-primary) !important;
@@ -408,20 +408,20 @@
 
 .clerkContainer :global(.cl-formFieldInput::placeholder),
 .clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput)::placeholder) {
-  color: var(--text-ghost) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 
 .clerkContainer :global(.cl-formFieldInput:hover),
 .clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput):hover) {
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  background-color: #25252d !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: #2a2a2a !important;
 }
 
 .clerkContainer :global(.cl-formFieldInput:focus),
 .clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput):focus) {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15) !important;
-  background-color: #1f221a !important;
+  background-color: #222222 !important;
 }
 
 /* Verification Code / OTP Inputs */
@@ -434,7 +434,7 @@
 }
 
 .clerkContainer :global(.cl-otpCodeFieldInput) {
-  background-color: #1e1e24 !important;
+  background-color: #222222 !important;
   border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
   border-radius: 8px !important;
   color: var(--text-primary) !important;
@@ -449,14 +449,14 @@
 }
 
 .clerkContainer :global(.cl-otpCodeFieldInput:hover) {
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  background-color: #25252d !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background-color: #2a2a2a !important;
 }
 
 .clerkContainer :global(.cl-otpCodeFieldInput:focus) {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15) !important;
-  background-color: #1f221a !important;
+  background-color: #222222 !important;
 }
 
 /* Password show/hide */
