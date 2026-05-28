@@ -8,9 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function DashboardGroupLayout({ children }) {
   const cookieStore = await cookies();
-  const isDevelopment = process.env.NODE_ENV !== 'production';
   const isDevBypass =
-    isDevelopment ||
     process.env.DEV_AUTH_BYPASS === 'true' ||
     process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
 

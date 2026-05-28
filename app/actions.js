@@ -15,21 +15,22 @@ export async function getDbUserAction() {
       const cookieStore = await cookies();
       const email = cookieStore.get('dev_user_email')?.value || getDevAuthBypassEmail();
       const role = cookieStore.get('dev_user_role')?.value || getDevAuthBypassRole() || 'creator';
-      const name = email.split('@')[0];
+      const googleId = cookieStore.get('dev_user_id')?.value || getDevAuthBypassEmail();
 
-      return {
-        id: -1,
-        email,
-        role,
-        name,
-        avatarUrl: null,
-        googleId: cookieStore.get('dev_user_id')?.value || email,
-        profileCompleted: true,
-        bio: null,
-        youtubeChannel: role === 'creator' ? '' : null,
-        companyName: role === 'brand' ? '' : null,
-        createdAt: new Date(),
-      };
+      const result = await db.select().from(users)
+        .where(or(eq(users.googleId, googleId), eq(users.email, email)))
+        .limit(1);
+
+      if (result.length > 0) {
+        return result[0];
+      }
+
+      const created = await createDbUserAction(role);
+      if (created.success) {
+        return created.user;
+      }
+
+      return null;
     }
 
     const authObj = await auth();
@@ -47,19 +48,10 @@ export async function getDbUserAction() {
   } catch (error) {
     console.error("Error getting database user:", error);
     if (isDevAuthBypassEnabled()) {
-      return {
-        id: -1,
-        email: getDevAuthBypassEmail(),
-        role: getDevAuthBypassRole() || 'creator',
-        name: getDevAuthBypassEmail().split('@')[0],
-        avatarUrl: null,
-        googleId: getDevAuthBypassEmail(),
-        profileCompleted: true,
-        bio: null,
-        youtubeChannel: '',
-        companyName: '',
-        createdAt: new Date(),
-      };
+      const fallback = await createDbUserAction(getDevAuthBypassRole() || 'creator');
+      if (fallback.success) {
+        return fallback.user;
+      }
     }
 
     return null;

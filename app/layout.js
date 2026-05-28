@@ -1,5 +1,4 @@
 import './globals.css';
-import { isDevAuthBypassEnabled } from '../lib/dev-auth';
 
 export const metadata = {
   title: 'YT Matcher',
@@ -7,13 +6,13 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }) {
-  const useClerk = process.env.NODE_ENV === 'production' && !isDevAuthBypassEnabled();
-  const ClerkProvider = useClerk ? (await import('@clerk/nextjs')).ClerkProvider : null;
+  const hasClerkConfig = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  const ClerkProvider = hasClerkConfig ? (await import('@clerk/nextjs')).ClerkProvider : null;
 
   return (
     <html lang="en">
       <body>
-        {useClerk && ClerkProvider ? <ClerkProvider>{children}</ClerkProvider> : children}
+        {ClerkProvider ? <ClerkProvider>{children}</ClerkProvider> : children}
       </body>
     </html>
   )
