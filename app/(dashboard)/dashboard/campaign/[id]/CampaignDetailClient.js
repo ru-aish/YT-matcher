@@ -31,6 +31,7 @@ export default function CampaignDetailClient({ data }) {
   const [deals, setDeals] = useState(initialDeals || []);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState('');
+  const [selectedCreator, setSelectedCreator] = useState(null);
 
   const isBrand = currentUser?.role === 'brand';
   const pendingInterests = interests.filter(i => i.status === 'interested');
@@ -93,6 +94,11 @@ export default function CampaignDetailClient({ data }) {
 
   return (
     <div className="stagger">
+      <style>{`
+        .creator-hover-title:hover {
+          text-decoration-color: currentColor !important;
+        }
+      `}</style>
       {/* Back + Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)' }}>
         <button className="btn btn-ghost btn-icon" onClick={() => router.push('/dashboard')}>
@@ -160,24 +166,30 @@ export default function CampaignDetailClient({ data }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
               {pendingInterests.map((interest) => (
                 <div key={interest.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)' }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    {interest.creator?.avatarUrl ? (
-                      <img src={interest.creator.avatarUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-                    ) : (
-                      <Video size={16} style={{ color: 'var(--text-muted)' }} />
-                    )}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{interest.creator?.name || 'Creator'}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <Video size={11} />
-                      {interest.creator?.youtubeChannel || 'No channel'}
+                  <div 
+                    onClick={() => setSelectedCreator(interest.creator)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)', flex: 1, cursor: 'pointer', minWidth: 0 }}
+                    title="Click to view creator profile"
+                  >
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {interest.creator?.avatarUrl ? (
+                        <img src={interest.creator.avatarUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                      ) : (
+                        <Video size={16} style={{ color: 'var(--text-muted)' }} />
+                      )}
                     </div>
-                    {interest.creator?.bio && (
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
-                        {interest.creator.bio.slice(0, 120)}{interest.creator.bio.length > 120 ? '...' : ''}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--accent)', textDecoration: 'underline', textDecorationColor: 'transparent', transition: 'text-decoration-color var(--duration-fast)' }} className="creator-hover-title">{interest.creator?.name || 'Creator'}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Video size={11} />
+                        {interest.creator?.youtubeChannel || 'No channel'}
                       </div>
-                    )}
+                      {interest.creator?.bio && (
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.4 }}>
+                          {interest.creator.bio.slice(0, 120)}{interest.creator.bio.length > 120 ? '...' : ''}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div style={{ display: 'flex', gap: 'var(--space-sm)', flexShrink: 0 }}>
                     <button
@@ -219,8 +231,22 @@ export default function CampaignDetailClient({ data }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
             {deals.map((deal) => (
               <div key={deal.id} className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)' }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+                <div 
+                  onClick={() => setSelectedCreator(deal.creator)}
+                  style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}
+                  title="Click to view creator profile"
+                >
+                  <div 
+                    style={{ 
+                      fontWeight: 700, 
+                      fontSize: '0.95rem', 
+                      color: 'var(--secondary)', 
+                      textDecoration: 'underline', 
+                      textDecorationColor: 'transparent',
+                      transition: 'text-decoration-color var(--duration-fast)'
+                    }} 
+                    className="creator-hover-title"
+                  >
                     {deal.creator?.name || 'Creator'}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginTop: 4 }}>
@@ -246,6 +272,160 @@ export default function CampaignDetailClient({ data }) {
           </div>
         )}
       </div>
+
+      {/* Creator Profile Modal */}
+      {selectedCreator && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 1000,
+            background: 'rgba(5, 5, 5, 0.8)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'var(--space-md)',
+            animation: 'fadeIn var(--duration-fast) var(--ease-out)',
+          }}
+          onClick={() => setSelectedCreator(null)}
+        >
+          <div 
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              padding: 'var(--space-xl)',
+              maxWidth: '540px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: 'var(--shadow-lg)',
+              animation: 'scaleIn var(--duration-normal) var(--ease-spring)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-lg)' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center' }}>
+                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {selectedCreator.avatarUrl ? (
+                    <img src={selectedCreator.avatarUrl} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <Video size={18} style={{ color: 'var(--text-muted)' }} />
+                  )}
+                </div>
+                <div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 800, textTransform: 'uppercase' }}>
+                    {selectedCreator.name || 'Creator'}
+                  </h3>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                    <Video size={11} />
+                    {selectedCreator.youtubeChannel || 'No channel'}
+                  </div>
+                </div>
+              </div>
+              <button 
+                className="btn btn-ghost btn-icon btn-sm" 
+                onClick={() => setSelectedCreator(null)}
+                style={{ width: 28, height: 28 }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
+              {/* Channel Stats Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)' }}>
+                <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <div className="text-label" style={{ fontSize: '0.65rem', marginBottom: 4 }}>Subscribers</div>
+                  <div className="text-mono text-accent" style={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                    {selectedCreator.subscriberCount?.toLocaleString() || 'N/A'}
+                  </div>
+                </div>
+                <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', boxShadow: '0 0 10px var(--accent-glow)' }}>
+                  <div className="text-label" style={{ fontSize: '0.65rem', marginBottom: 4 }}>Avg. Views / Video</div>
+                  <div className="text-mono text-secondary-color" style={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                    {selectedCreator.averageViewsPerVideo?.toLocaleString() || 'N/A'}
+                  </div>
+                </div>
+                <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <div className="text-label" style={{ fontSize: '0.65rem', marginBottom: 4 }}>Niche</div>
+                  <div className="text-mono" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'white' }}>
+                    {selectedCreator.primaryNiche || 'N/A'}
+                  </div>
+                </div>
+                <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  <div className="text-label" style={{ fontSize: '0.65rem', marginBottom: 4 }}>Min Sponsorship</div>
+                  <div className="text-mono text-secondary-color" style={{ fontWeight: 700, fontSize: '1.1rem' }}>
+                    {selectedCreator.minimumSponsorshipRateUsd ? `$${selectedCreator.minimumSponsorshipRateUsd.toLocaleString()}` : 'N/A'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Channel URL & Audience */}
+              <div style={{ background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                  <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Audience Country:</span>
+                  <span style={{ color: 'white', fontWeight: 700 }}>{selectedCreator.topAudienceCountry || 'Global'}</span>
+                </div>
+                {selectedCreator.youtubeChannelUrl && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', borderTop: '1px solid var(--border)', paddingTop: 'var(--space-xs)' }}>
+                    <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Channel Link:</span>
+                    <a 
+                      href={selectedCreator.youtubeChannelUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      style={{ color: 'var(--accent)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                    >
+                      Visit Channel <ExternalLink size={12} />
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Bio */}
+              <div>
+                <div className="text-label" style={{ marginBottom: 'var(--space-sm)' }}>Bio / Description</div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, background: 'var(--bg-elevated)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)' }}>
+                  {selectedCreator.bio || 'No bio provided.'}
+                </p>
+              </div>
+
+              {/* Modal Footer (Action buttons) */}
+              {isBrand && pendingInterests.some(i => i.creator?.id === selectedCreator.id) && (
+                <div style={{ display: 'flex', gap: 'var(--space-md)', borderTop: '1px solid var(--border)', paddingTop: 'var(--space-lg)', marginTop: 'var(--space-sm)' }}>
+                  <button
+                    className="btn btn-primary"
+                    style={{ flex: 1 }}
+                    onClick={() => {
+                      handleAccept(selectedCreator.id);
+                      setSelectedCreator(null);
+                    }}
+                    disabled={loading === `accept-${selectedCreator.id}`}
+                  >
+                    <CheckCircle size={14} />
+                    Accept Application
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    style={{ width: '48px', padding: 0 }}
+                    onClick={() => {
+                      const interest = pendingInterests.find(i => i.creator?.id === selectedCreator.id);
+                      if (interest) handleReject(interest.id);
+                      setSelectedCreator(null);
+                    }}
+                    disabled={loading === `accept-${selectedCreator.id}`}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
