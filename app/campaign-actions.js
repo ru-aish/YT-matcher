@@ -49,12 +49,12 @@ export async function createCampaignAction({ title, description, requirements, b
 
     const parsedBudget = parseInt(budget, 10);
     const normalizedBudget = Number.isFinite(parsedBudget) ? parsedBudget : 0;
-    const requiredDeliverable = requirements?.trim() || description?.trim() || null;
+    const requiredDeliverable = requirements?.trim() || description?.trim() || 'No specific requirements';
 
     const newCampaign = await db.insert(campaigns).values({
       brandUserId: user.id,
       title: title.trim(),
-      targetAudienceCountry: null,
+      targetAudienceCountry: 'Anywhere',
       budgetMinUsd: normalizedBudget,
       budgetMaxUsd: normalizedBudget,
       requiredDeliverable,
@@ -126,10 +126,10 @@ export async function updateCampaignAction(campaignId, data) {
     const updated = await db.update(campaigns)
       .set({
         title: data.title?.trim() || existing[0].title,
-        targetAudienceCountry: data.targetAudienceCountry?.trim() ?? existing[0].targetAudienceCountry ?? null,
+        targetAudienceCountry: data.targetAudienceCountry?.trim() ?? existing[0].targetAudienceCountry ?? 'Anywhere',
         budgetMinUsd: normalizedBudget,
         budgetMaxUsd: normalizedBudget,
-        requiredDeliverable: data.requirements?.trim() ?? data.description?.trim() ?? existing[0].requiredDeliverable,
+        requiredDeliverable: data.requirements?.trim() ?? data.description?.trim() ?? existing[0].requiredDeliverable ?? 'No specific requirements',
         status: data.status || existing[0].status,
       })
       .where(eq(campaigns.id, parseInt(campaignId)))
