@@ -1,0 +1,590 @@
+/* ═══════════════════════════════════════════════════════════
+   YT MATCHER — AUTH STYLING (CENTERED LOGIN & SIGNUP)
+   Polished — v3
+   ═══════════════════════════════════════════════════════════ */
+
+.authPage {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-xl) var(--space-md);
+}
+
+/* ── Animated grid that slowly drifts ──────────────────── */
+.authPage::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image:
+    linear-gradient(rgba(204, 255, 0, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(204, 255, 0, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 20%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: gridDrift 25s linear infinite;
+}
+
+@keyframes gridDrift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(56px, 56px); }
+}
+
+/* ── Primary ambient glow (accent yellow-green) ───────── */
+.authGlow {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(204, 255, 0, 0.06) 0%, transparent 65%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 6s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* ── Secondary ambient glow (teal) ─────────────────────── */
+.authGlowSecondary {
+  position: absolute;
+  bottom: 10%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(0, 224, 158, 0.04) 0%, transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse2 8s ease-in-out infinite;
+}
+
+@keyframes glowPulse2 {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* ── Form Container ────────────────────────────────────── */
+.formContainer {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  animation: scaleIn 0.6s var(--ease-out) both;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Center Logo Header ────────────────────────────────── */
+.cardHeaderLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: var(--space-xs);
+}
+
+.logoBadge {
+  background: var(--accent);
+  color: #000000;
+  font-weight: 900;
+  padding: 7px 13px;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  letter-spacing: -0.05em;
+  font-size: 1.15rem;
+  box-shadow:
+    0 0 18px rgba(204, 255, 0, 0.25),
+    0 0 60px rgba(204, 255, 0, 0.08);
+  transition: box-shadow 0.4s ease;
+}
+
+.cardHeaderLogo:hover .logoBadge {
+  box-shadow:
+    0 0 24px rgba(204, 255, 0, 0.35),
+    0 0 80px rgba(204, 255, 0, 0.12);
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+/* ── Auth Card ─────────────────────────────────────────── */
+.formCard {
+  background: rgba(12, 12, 12, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: var(--space-xl);
+  backdrop-filter: blur(32px) saturate(1.4);
+  -webkit-backdrop-filter: blur(32px) saturate(1.4);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 24px 68px rgba(0, 0, 0, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  .formCard {
+    padding: 2.25rem 2rem;
+  }
+}
+
+/* Top accent line */
+.formCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 5%,
+    rgba(204, 255, 0, 0.4) 30%,
+    rgba(204, 255, 0, 0.6) 50%,
+    rgba(204, 255, 0, 0.4) 70%,
+    transparent 95%
+  );
+}
+
+/* Subtle corner highlight */
+.formCard::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(204, 255, 0, 0.035) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.formTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.formSubtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+/* ── Role Selector Cards ───────────────────────────────── */
+.roleCards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roleCard {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.roleCard:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(204, 255, 0, 0.18);
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(204, 255, 0, 0.06);
+}
+
+.roleCard:active {
+  transform: translateY(-1px);
+  transition-duration: 0.1s;
+}
+
+.roleCardGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, rgba(204, 255, 0, 0.06), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.roleCard:hover .roleCardGlow {
+  opacity: 1;
+}
+
+.roleCardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.roleCard:hover .roleCardIcon {
+  border-color: rgba(204, 255, 0, 0.4);
+  color: var(--accent);
+  background: rgba(204, 255, 0, 0.06);
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.12);
+}
+
+.roleCardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 1;
+  text-align: left;
+}
+
+.roleCardLabel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  transition: color 0.25s ease;
+}
+
+.roleCard:hover .roleCardLabel {
+  color: var(--accent);
+}
+
+.roleCardDesc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.roleCardAction {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-ghost);
+  transition: all 0.3s ease;
+  z-index: 1;
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.roleCard:hover .roleCardAction {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+/* ── Clerk Container ───────────────────────────────────── */
+.clerkContainer {
+  animation: slideUp 0.4s var(--ease-out) both;
+  width: 100%;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: var(--space-lg);
+  padding: 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  background: transparent;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Footer ────────────────────────────────────────────── */
+.formFooter {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-ghost);
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  margin-top: var(--space-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CLERK OVERRIDES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Card reset */
+.clerkContainer :global(.cl-cardBox),
+.clerkContainer :global(.cl-card) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.clerkContainer :global(.cl-header) {
+  display: none !important;
+}
+
+/* Labels */
+.clerkContainer :global(.cl-formFieldLabel) {
+  color: var(--text-secondary) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 8px !important;
+}
+
+/* Input Fields */
+.clerkContainer :global(.cl-formFieldInput),
+.clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput)) {
+  background-color: #1e1e24 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 10px !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-body) !important;
+  padding: 0.8rem 1rem !important;
+  font-size: 0.9rem !important;
+  height: 46px !important;
+  transition: all 0.2s ease !important;
+}
+
+.clerkContainer :global(.cl-formFieldInput::placeholder),
+.clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput)::placeholder) {
+  color: var(--text-ghost) !important;
+}
+
+.clerkContainer :global(.cl-formFieldInput:hover),
+.clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput):hover) {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  background-color: #25252d !important;
+}
+
+.clerkContainer :global(.cl-formFieldInput:focus),
+.clerkContainer :global(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]):not(.cl-otpCodeFieldInput):focus) {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15) !important;
+  background-color: #1f221a !important;
+}
+
+/* Verification Code / OTP Inputs */
+.clerkContainer :global(.cl-otpCodeFieldInputs) {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.clerkContainer :global(.cl-otpCodeFieldInput) {
+  background-color: #1e1e24 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important;
+  height: 46px !important;
+  width: 42px !important;
+  text-align: center !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.clerkContainer :global(.cl-otpCodeFieldInput:hover) {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  background-color: #25252d !important;
+}
+
+.clerkContainer :global(.cl-otpCodeFieldInput:focus) {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15) !important;
+  background-color: #1f221a !important;
+}
+
+/* Password show/hide */
+.clerkContainer :global(.cl-formFieldInputShowHideButton) {
+  color: var(--text-muted) !important;
+}
+
+.clerkContainer :global(.cl-formFieldInputShowHideButton:hover) {
+  color: var(--text-secondary) !important;
+}
+
+/* Primary Action Button */
+.clerkContainer :global(.cl-formButtonPrimary) {
+  background-color: var(--accent) !important;
+  background-image: none !important;
+  border: none !important;
+  color: #000000 !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 0.85rem !important;
+  border-radius: 10px !important;
+  height: 46px !important;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.08) !important;
+}
+
+.clerkContainer :global(.cl-formButtonPrimary:hover) {
+  background-color: var(--accent-dim) !important;
+  box-shadow:
+    0 0 28px rgba(204, 255, 0, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-1px) !important;
+}
+
+.clerkContainer :global(.cl-formButtonPrimary:active) {
+  transform: translateY(0) scale(0.99) !important;
+  transition-duration: 0.1s !important;
+}
+
+/* OAuth Social Buttons */
+.clerkContainer :global(.cl-socialButtonsBlockButton) {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-body) !important;
+  height: 46px !important;
+  transition: all 0.25s ease !important;
+}
+
+.clerkContainer :global(.cl-socialButtonsBlockButton:hover) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+.clerkContainer :global(.cl-socialButtonsBlockButtonText) {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* Divider */
+.clerkContainer :global(.cl-dividerLine) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.clerkContainer :global(.cl-dividerText) {
+  color: var(--text-ghost) !important;
+  font-size: 0.78rem !important;
+  font-family: var(--font-mono) !important;
+}
+
+/* Footer */
+.clerkContainer :global(.cl-footer) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  margin-top: var(--space-lg) !important;
+  padding-top: var(--space-md) !important;
+}
+
+.clerkContainer :global(.cl-footerActionText) {
+  color: var(--text-muted) !important;
+}
+
+.clerkContainer :global(.cl-footerActionLink) {
+  color: var(--accent) !important;
+  font-weight: 700 !important;
+  transition: all 0.15s ease !important;
+}
+
+.clerkContainer :global(.cl-footerActionLink:hover) {
+  color: var(--accent-dim) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+/* Nuke all Clerk internal backgrounds */
+.clerkContainer :global(.cl-internal-1805p6a),
+.clerkContainer :global(.cl-footer > div),
+.clerkContainer :global(.cl-internal-1wsr6s1),
+.clerkContainer :global(.cl-footerAction) {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ── Animations ────────────────────────────────────────── */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

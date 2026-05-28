@@ -71,8 +71,8 @@
 
 .searchInput {
   width: 100%;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: #1e1e24;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-full);
   padding: 0.55rem 1rem 0.55rem 2.25rem;
   font-size: 0.8rem;
@@ -80,9 +80,16 @@
   transition: all var(--duration-fast);
 }
 
+.searchInput:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: #25252d;
+}
+
 .searchInput:focus {
-  border-color: var(--border-accent);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15);
+  background: #1f221a;
+  outline: none;
 }
 
 .searchInput::placeholder {

@@ -321,8 +321,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Inputs ────────────────────────────────────────────── */
 .input {
   width: 100%;
-  background: var(--bg-base);
-  border: 1px solid var(--border);
+  background: #1e1e24;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: var(--radius-md);
   padding: 0.7rem 1rem;
   font-size: 0.9rem;
@@ -330,9 +330,16 @@ h1, h2, h3, h4, h5, h6 {
   transition: all var(--duration-normal) var(--ease-out);
 }
 
+.input:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: #25252d;
+}
+
 .input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15);
+  background: #1f221a;
+  outline: none;
 }
 
 .input::placeholder {
