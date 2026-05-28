@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const role = searchParams.get('role') || 'brand';
-  const id = searchParams.get('id') || 'dev_brand_123';
+  const id = searchParams.get('id') || (role === 'brand' ? 'dev_brand_123' : 'dev_creator_456');
   const email = searchParams.get('email') || (role === 'brand' ? 'test_brand@example.com' : 'test_creator@example.com');
   const redirectTo = searchParams.get('redirect') || '/dashboard';
   const redirectUrl = new URL(redirectTo, request.url);
