@@ -2,8 +2,6 @@
    YT MATCHER — NEO-BRUTALIST DESIGN SYSTEM
    ═══════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
 /* ── Design Tokens ─────────────────────────────────────── */
 :root {
   /* Backgrounds */
@@ -37,14 +35,14 @@
 
   /* Text */
   --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-muted: #666666;
-  --text-ghost: #444444;
+  --text-secondary: #b8b8b8;
+  --text-muted: #707070;
+  --text-ghost: #4a4a4a;
 
   /* Typography */
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: var(--font-display), 'Syne', sans-serif;
+  --font-body: var(--font-body), 'Plus Jakarta Sans', sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -88,6 +86,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -99,6 +98,12 @@ body {
   font-size: 15px;
   line-height: 1.6;
 }
+
+::selection {
+  background: var(--accent);
+  color: #000000;
+}
+
 
 a {
   color: inherit;
