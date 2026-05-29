@@ -66,6 +66,48 @@ function PlayCircleIcon() {
   );
 }
 
+function ApexIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 2 22 22 22" />
+    </svg>
+  );
+}
+
+function PulseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </svg>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function RingIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+
 // Hook: Intersection Observer for scroll reveal
 function useReveal() {
   const ref = useRef(null);
@@ -108,6 +150,9 @@ function Reveal({ children, delay = 0 }) {
 export default function LandingPage() {
   const [wordIndex, setWordIndex] = useState(0);
   const [authState, setAuthState] = useState({ isSignedIn: false, loading: true });
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
+  const toggleFaq = (index) => setOpenFaqIndex(openFaqIndex === index ? null : index);
 
   // Rotating word cycle
   useEffect(() => {
@@ -145,10 +190,24 @@ export default function LandingPage() {
 
       {/* ── Hero ── */}
       <section className={styles.hero} id="hero">
+        {/* Background Visual Elements */}
+        <div className={styles.gridOverlay} />
+        <div className={styles.orbsContainer}>
+          <div className={`${styles.orb} ${styles.orb1}`} />
+          <div className={`${styles.orb} ${styles.orb2}`} />
+        </div>
+
         <div className={styles.heroContent}>
+          {/* Announcement Badge */}
+          <div className={styles.heroBadge}>
+            <span className={styles.heroBadgeDot} />
+            <span className={styles.heroBadgeText}>✨ Flat 10% Closed-Deal Commission</span>
+          </div>
+
           <h1 className={styles.heroHeadline}>
             The simplest way to connect{' '}
-            <span className={styles.heroAccent}>Brands</span> ↔{' '}
+            <span className={styles.heroAccent}>Brands</span>
+            <span className={styles.heroArrow}> ⇄ </span>
             <span className={styles.heroSecondary}>Creators</span>
           </h1>
           <div className={styles.heroRotatingWord} aria-live="polite">
@@ -165,6 +224,34 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Brand Marquee ── */}
+      <section className={styles.marqueeSection}>
+        <h2 className={styles.marqueeTitle}>Matched Creators & Brands from</h2>
+        <div className={styles.marqueeContainer}>
+          <div className={styles.marqueeTrack}>
+            <div className={styles.marqueeGroup}>
+              <div className={styles.marqueeLogo}><ApexIcon /> <span className={styles.marqueeLogoText}>ApexMedia</span></div>
+              <div className={styles.marqueeLogo}><PulseIcon /> <span className={styles.marqueeLogoText}>PulseEnergy</span></div>
+              <div className={styles.marqueeLogo}><ShieldIcon /> <span className={styles.marqueeLogoText}>NordicGear</span></div>
+              <div className={styles.marqueeLogo}><RingIcon /> <span className={styles.marqueeLogoText}>NovaLife</span></div>
+              <div className={styles.marqueeLogo}><ApexIcon /> <span className={styles.marqueeLogoText}>VividStudio</span></div>
+              <div className={styles.marqueeLogo}><PulseIcon /> <span className={styles.marqueeLogoText}>TechVibe</span></div>
+            </div>
+            {/* Duplicate for infinite marquee scrolling effect */}
+            <div className={styles.marqueeGroup}>
+              <div className={styles.marqueeLogo}><ApexIcon /> <span className={styles.marqueeLogoText}>ApexMedia</span></div>
+              <div className={styles.marqueeLogo}><PulseIcon /> <span className={styles.marqueeLogoText}>PulseEnergy</span></div>
+              <div className={styles.marqueeLogo}><ShieldIcon /> <span className={styles.marqueeLogoText}>NordicGear</span></div>
+              <div className={styles.marqueeLogo}><RingIcon /> <span className={styles.marqueeLogoText}>NovaLife</span></div>
+              <div className={styles.marqueeLogo}><ApexIcon /> <span className={styles.marqueeLogoText}>VividStudio</span></div>
+              <div className={styles.marqueeLogo}><PulseIcon /> <span className={styles.marqueeLogoText}>TechVibe</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr className={styles.sectionDivider} />
+
       {/* ── How It Works ── */}
       <section className={styles.howSection} id="how-it-works">
         <div className={styles.container}>
@@ -176,6 +263,7 @@ export default function LandingPage() {
           <div className={styles.stepsGrid}>
             <Reveal delay={0}>
               <div className={styles.step}>
+                <span className={styles.stepBackgroundNumber}>01</span>
                 <p className={styles.stepNumber}>Step 01</p>
                 <div className={styles.stepIcon}>
                   <MegaphoneIcon />
@@ -189,6 +277,7 @@ export default function LandingPage() {
 
             <Reveal delay={120}>
               <div className={styles.step}>
+                <span className={styles.stepBackgroundNumber}>02</span>
                 <p className={styles.stepNumber}>Step 02</p>
                 <div className={styles.stepIcon}>
                   <SparklesIcon />
@@ -202,6 +291,7 @@ export default function LandingPage() {
 
             <Reveal delay={240}>
               <div className={styles.step}>
+                <span className={styles.stepBackgroundNumber}>03</span>
                 <p className={styles.stepNumber}>Step 03</p>
                 <div className={styles.stepIcon}>
                   <HandshakeIcon />
@@ -226,6 +316,8 @@ export default function LandingPage() {
           </Reveal>
         </div>
       </section>
+
+      <hr className={styles.sectionDivider} />
 
       {/* ── Benefits ── */}
       <section className={styles.benefitsSection} id="benefits">
@@ -299,6 +391,40 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <hr className={styles.sectionDivider} />
+
+      {/* ── Metrics/Stats ── */}
+      <section className={styles.statsSection}>
+        <div className={styles.container}>
+          <Reveal>
+            <div className={styles.statsGrid}>
+              <div className={styles.statCard}>
+                <h3 className={styles.statNumber}>10%</h3>
+                <p className={styles.statLabel}>Flat Commission</p>
+                <p className={styles.statDesc}>No upfront fees or retainers. We only win when you win.</p>
+              </div>
+              <div className={styles.statCard}>
+                <h3 className={styles.statNumber}>Escrow</h3>
+                <p className={styles.statLabel}>Deal Protection</p>
+                <p className={styles.statDesc}>Secured funds protect brands and creators from ghosting.</p>
+              </div>
+              <div className={styles.statCard}>
+                <h3 className={styles.statNumber}>2.4x</h3>
+                <p className={styles.statLabel}>Audience Alignment</p>
+                <p className={styles.statDesc}>Algorithm-driven selection ensures matches align with your niche.</p>
+              </div>
+              <div className={styles.statCard}>
+                <h3 className={styles.statNumber}>&lt;24 hrs</h3>
+                <p className={styles.statLabel}>Outreach Response</p>
+                <p className={styles.statDesc}>Average time to secure the first brand response for a campaign.</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <hr className={styles.sectionDivider} />
+
       {/* ── Transparency Calculator ── */}
       <section className={styles.transparencySection} id="transparency">
         <div className={styles.container}>
@@ -313,6 +439,60 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <hr className={styles.sectionDivider} />
+
+      {/* ── FAQ ── */}
+      <section className={styles.faqSection} id="faq">
+        <div className={styles.container}>
+          <Reveal>
+            <p className={styles.sectionLabel} style={{ textAlign: 'center' }}>Questions?</p>
+            <h2 className={styles.sectionTitle} style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
+          </Reveal>
+
+          <div className={styles.faqGrid}>
+            {[
+              {
+                q: "How does the campaign matching algorithm work?",
+                a: "Instead of focusing solely on raw follower counts, we analyze audience demographics, engagement rate, content categories, and geographic split to connect brands with creators whose audience actually matches their target customer profile."
+              },
+              {
+                q: "Who handles the payments and contracts?",
+                a: "YT Matcher holds campaign funds in a secure, platform escrow system once terms are agreed. Funds are only disbursed to the creator once they deliver the sponsor integration and both parties verify completion, completely eliminating payment ghosting."
+              },
+              {
+                q: "What does the 10% fee cover?",
+                a: "The fee covers platform access, matching analytics, secure escrow transaction infrastructure, contract templates, and support. There are absolutely no setup costs, monthly subscriptions, or agency markups."
+              },
+              {
+                q: "Can I use the platform as both a brand and a creator?",
+                a: "Yes! Your user dashboard allows you to configure creator channels and manage incoming sponsorships, or switch to the brand view to launch custom outreach campaigns with separate profile details."
+              }
+            ].map((faq, idx) => (
+              <Reveal key={idx} delay={idx * 60}>
+                <div 
+                  className={`${styles.faqCard} ${openFaqIndex === idx ? styles.faqCardOpen : ''}`}
+                  onClick={() => toggleFaq(idx)}
+                >
+                  <button className={styles.faqHeader} type="button" aria-expanded={openFaqIndex === idx}>
+                    <span className={styles.faqQuestion}>{faq.q}</span>
+                    <span className={styles.faqIcon}>
+                      <ChevronDownIcon />
+                    </span>
+                  </button>
+                  <div className={`${styles.faqAnswerWrapper} ${openFaqIndex === idx ? styles.faqAnswerWrapperOpen : ''}`}>
+                    <div className={styles.faqAnswerInner}>
+                      <p className={styles.faqAnswer}>{faq.a}</p>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <hr className={styles.sectionDivider} />
+
       {/* ── Final CTA ── */}
       <section className={styles.ctaSection} id="final-cta">
         <div className={styles.container}>
@@ -325,6 +505,60 @@ export default function LandingPage() {
           </Reveal>
         </div>
       </section>
+
+      {/* ── Footer ── */}
+      <footer className={styles.footer}>
+        <div className={styles.container}>
+          <div className={styles.footerGrid}>
+            <div className={styles.footerBrandColumn}>
+              <Link href="/" className={styles.logo}>
+                <div className={styles.logoMark} aria-hidden="true" />
+                <span className={styles.logoText}>YT Matcher</span>
+              </Link>
+              <p className={styles.footerBrandDesc}>
+                Connecting YouTube creators and premium brands directly, fairly, and transparently.
+              </p>
+            </div>
+            <div className={styles.footerColumn}>
+              <h4 className={styles.footerTitle}>Product</h4>
+              <ul className={styles.footerList}>
+                <li><a href="#how-it-works" className={styles.footerLink}>How It Works</a></li>
+                <li><a href="#benefits" className={styles.footerLink}>Features</a></li>
+                <li><a href="#transparency" className={styles.footerLink}>Pricing Calculator</a></li>
+              </ul>
+            </div>
+            <div className={styles.footerColumn}>
+              <h4 className={styles.footerTitle}>Resources</h4>
+              <ul className={styles.footerList}>
+                <li><a href="#faq" className={styles.footerLink}>FAQ</a></li>
+                <li><Link href="/login" className={styles.footerLink}>Creator Sign In</Link></li>
+                <li><Link href="/signup" className={styles.footerLink}>Brand Registration</Link></li>
+              </ul>
+            </div>
+            <div className={styles.footerColumn}>
+              <h4 className={styles.footerTitle}>Legal</h4>
+              <ul className={styles.footerList}>
+                <li><a href="#" className={styles.footerLink}>Terms of Service</a></li>
+                <li><a href="#" className={styles.footerLink}>Privacy Policy</a></li>
+                <li><a href="#" className={styles.footerLink}>Escrow Agreement</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className={styles.footerBottom}>
+            <div className={styles.footerBottomInner}>
+              <p className={styles.footerText}>
+                © {new Date().getFullYear()} YT Matcher. All rights reserved.
+              </p>
+              <div className={styles.footerBottomLinks}>
+                <a href="#" className={styles.footerBottomLink}>Twitter</a>
+                <a href="#" className={styles.footerBottomLink}>YouTube</a>
+                <a href="#" className={styles.footerBottomLink}>LinkedIn</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

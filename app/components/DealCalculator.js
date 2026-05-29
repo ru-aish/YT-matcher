@@ -56,6 +56,8 @@ export default function DealCalculator() {
   const [currencyKey, setCurrencyKey] = useState('INR'); // Default, updated after detection
   const [dealAmount, setDealAmount] = useState(CURRENCY_MAP.INR.default);
   const [detected, setDetected] = useState(false);
+  const [isCreatorView, setIsCreatorView] = useState(true);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   // Detect region on mount
   useEffect(() => {
@@ -101,30 +103,73 @@ export default function DealCalculator() {
   // Calculate the fill percentage for the slider track
   const fillPercent = ((dealAmount - config.min) / (config.max - config.min)) * 100;
 
+  const activeColor = isCreatorView ? 'var(--secondary)' : 'var(--accent)';
+  const activeGlow = isCreatorView ? 'rgba(0, 224, 158, 0.15)' : 'var(--accent-glow-strong)';
+  const activeGlowLight = isCreatorView ? 'rgba(0, 224, 158, 0.08)' : 'rgba(204, 255, 0, 0.08)';
+
   return (
     <div className={styles.calculatorCard} id="deal-calculator">
-      {/* Slider */}
+      {/* View Toggle */}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.calcToggleContainer}>
+          <button 
+            className={`${styles.calcToggleBtn} ${!isCreatorView ? styles.calcToggleBtnActive : ''}`}
+            onClick={() => setIsCreatorView(false)}
+            type="button"
+          >
+            Brand View
+          </button>
+          <button 
+            className={`${styles.calcToggleBtn} ${isCreatorView ? styles.calcToggleBtnActiveCreator : ''}`}
+            onClick={() => setIsCreatorView(true)}
+            type="button"
+          >
+            Creator View
+          </button>
+        </div>
+      </div>
+
+      {/* Currency selector + Slider */}
       <div className={styles.calculatorSlider}>
         <div className={styles.sliderLabel}>
           <span>Deal Amount</span>
-          <span className={styles.sliderValue}>
+          <span className={styles.sliderValue} style={{ color: activeColor }}>
             {detected ? formatCurrency(dealAmount, config) : '...'}
           </span>
         </div>
-        <input
-          type="range"
-          min={config.min}
-          max={config.max}
-          step={config.step}
-          value={dealAmount}
-          onChange={handleSliderChange}
-          className={styles.sliderTrack}
-          id="deal-amount-slider"
-          aria-label="Deal amount"
-          style={{
-            background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${fillPercent}%, var(--bg-elevated) ${fillPercent}%, var(--bg-elevated) 100%)`,
-          }}
-        />
+        
+        <div className={styles.sliderTooltipContainer}>
+          <div 
+            className={`${styles.sliderTooltip} ${isTooltipVisible ? styles.sliderTooltipVisible : ''} ${isCreatorView ? styles.sliderTooltipCreator : ''}`}
+            style={{ left: `${fillPercent}%` }}
+          >
+            {detected ? formatCurrency(dealAmount, config) : '...'}
+          </div>
+          <input
+            type="range"
+            min={config.min}
+            max={config.max}
+            step={config.step}
+            value={dealAmount}
+            onChange={handleSliderChange}
+            onMouseEnter={() => setIsTooltipVisible(true)}
+            onMouseLeave={() => setIsTooltipVisible(false)}
+            onFocus={() => setIsTooltipVisible(true)}
+            onBlur={() => setIsTooltipVisible(false)}
+            onTouchStart={() => setIsTooltipVisible(true)}
+            onTouchEnd={() => setIsTooltipVisible(false)}
+            className={styles.sliderTrack}
+            id="deal-amount-slider"
+            aria-label="Deal amount"
+            style={{
+              background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${fillPercent}%, var(--bg-elevated) ${fillPercent}%, var(--bg-elevated) 100%)`,
+              '--active-color': activeColor,
+              '--active-glow': activeGlow,
+              '--active-glow-light': activeGlowLight,
+            }}
+          />
+        </div>
+
         <div className={styles.sliderRange}>
           <span>{formatCurrency(config.min, config)}</span>
           <span>{formatCurrency(config.max, config)}</span>
@@ -133,7 +178,7 @@ export default function DealCalculator() {
 
       {/* Breakdown */}
       <div className={styles.breakdownGrid}>
-        <div className={styles.breakdownItem}>
+        <div className={`${styles.breakdownItem} ${!isCreatorView ? styles.breakdownHighlight : ''}`}>
           <span className={styles.breakdownLabel}>Brand Pays</span>
           <span className={styles.breakdownValue}>
             {formatCurrency(dealAmount, config)}
@@ -145,7 +190,7 @@ export default function DealCalculator() {
             {formatCurrency(platformFee, config)}
           </span>
         </div>
-        <div className={`${styles.breakdownItem} ${styles.breakdownHighlight}`}>
+        <div className={`${styles.breakdownItem} ${isCreatorView ? styles.breakdownHighlightCreator : ''}`}>
           <span className={styles.breakdownLabel}>Creator Receives</span>
           <span className={styles.breakdownValue}>
             {formatCurrency(creatorReceives, config)}

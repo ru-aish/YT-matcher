@@ -35,9 +35,9 @@
 
   /* Text */
   --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-muted: #666666;
-  --text-ghost: #444444;
+  --text-secondary: #b8b8b8;
+  --text-muted: #707070;
+  --text-ghost: #4a4a4a;
 
   /* Typography */
   --font-display: var(--font-display), 'Syne', sans-serif;
@@ -98,6 +98,12 @@ body {
   font-size: 15px;
   line-height: 1.6;
 }
+
+::selection {
+  background: var(--accent);
+  color: #000000;
+}
+
 
 a {
   color: inherit;

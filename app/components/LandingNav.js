@@ -87,6 +87,14 @@ export default function LandingNav() {
           <span className={styles.logoText}>YT Matcher</span>
         </Link>
 
+        {/* Navigation Links */}
+        <div className={styles.navLinks}>
+          <a href="#how-it-works" className={styles.navLink}>How It Works</a>
+          <a href="#benefits" className={styles.navLink}>Benefits</a>
+          <a href="#transparency" className={styles.navLink}>Calculator</a>
+          <a href="#faq" className={styles.navLink}>FAQ</a>
+        </div>
+
         {/* Auth-aware CTA */}
         <div className={styles.navCta}>
           {clerkHooks ? (

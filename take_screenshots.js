@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 
-const OUTPUT_DIR = '/home/coder/.gemini/antigravity/brain/6c07bb41-d0f7-439f-b194-b1d0f36fec78';
+const OUTPUT_DIR = '/home/coder/.gemini/antigravity/brain/a29c35d4-ac0b-4635-819d-54e5f82b3fc0';
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
