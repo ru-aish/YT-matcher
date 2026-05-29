@@ -1,0 +1,21 @@
+{
+  "project_type": "Next.js 16 App Router landing page (Creator/Brand matchmaking marketplace)",
+  "language": "JavaScript (plain, no TypeScript)",
+  "build_system": "pnpm 10.33.0, Next.js build",
+  "test_framework": "None currently - visual verification only",
+  "build_command": "cd /projects/sandbox/YT-matcher && pnpm build",
+  "test_command": "cd /projects/sandbox/YT-matcher && pnpm build",
+  "verification_instructions": "Run pnpm build to verify the app compiles without errors",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "cd /projects/sandbox/YT-matcher && pnpm install",
+  "environment_constraints": "OPEN_INTERNET - full network access, can install any packages. Node v22, pnpm 10.33.0 available.",
+  "contribution_requirements": "None specified - greenfield landing page UI",
+  "key_patterns": "Next.js App Router with app/ directory. Currently uses plain JS with 'use client' directive. No CSS framework installed yet. layout.js exports metadata object.",
+  "relevant_files": [
+    "app/page.js",
+    "app/layout.js",
+    "package.json",
+    "next.config.js"
+  ],
+  "directory_structure": "app/ - Next.js app router pages, public/ - static assets, docs/ - project planning docs"
+}

@@ -1,0 +1,7 @@
+{
+  "task_id": "task-landing-ui-redesign",
+  "task_description": "Redesign the YT-Matcher landing page with 5 distinct UI sections: Hero, How It Works, Interactive Demo, Social Proof, and CTA. Dark theme with distinctive typography, animations, and interactive elements following Anthropic frontend-design skill guidelines.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

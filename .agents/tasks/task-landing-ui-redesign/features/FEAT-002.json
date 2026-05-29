@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Build the complete landing page with all 5 sections: Hero, How It Works, Interactive Demo, Social Proof, and CTA. Each section is a separate React component in app/components/. The page.js orchestrates them all into a single scrolling dark-themed landing page with animations, interactivity, and distinctive visual design.",
+  "status": "pending",
+  "steps": [
+    "Create app/components/Hero.js - A bold dark hero section with: animated gradient mesh background (CSS keyframe animations on radial gradients), staggered text reveal using framer-motion (AnimatePresence + motion.div with delays), headline like 'Where Creators Meet Brands' with Space Grotesk font, subtle floating geometric shapes (CSS-only decorative elements positioned absolute), a glowing CTA button with hover micro-interaction. Use asymmetric layout with text on left side.",
+    "Create app/components/HowItWorks.js - Visual process flow showing 4 steps: (1) Creator Posts Profile, (2) Algorithm Matches, (3) Brand Connects, (4) Deal Closes. Use a horizontal timeline on desktop / vertical on mobile. Each step is a card with an icon (use simple SVG icons inline), step number, title, and description. Animate cards on scroll using framer-motion useInView hook. Connect steps with animated dashed lines or glowing connector paths. Add subtle particle dots or grid pattern behind.",
+    "Create app/components/InteractiveDemo.js - A simulated matching card interface. Show 3-4 mock creator cards that users can interact with: hovering reveals stats (subscribers, niche, engagement rate), clicking 'Match' triggers an animation (card flies to a 'matched' pile with a satisfying motion). Use framer-motion for drag/swipe gestures or click interactions. Include a mock filter bar at the top (categories like Tech, Gaming, Lifestyle) that filters the visible cards with layout animations.",
+    "Create app/components/SocialProof.js - Stats section with animated counters (count up on scroll into view using framer-motion + useInView). Show metrics like '10,000+ Creators', '2,500+ Brands', '$5M+ Deals Closed', '98% Match Rate'. Below stats, show a horizontal scrolling marquee of mock creator avatars/brand logos (CSS animation infinite scroll). Add subtle testimonial quotes with attribution.",
+    "Create app/components/CTA.js - Final call-to-action section. Two large cards side by side: 'I'm a Creator' and 'I'm a Brand' with distinct styling for each (different accent colors or gradients). Hover effects that scale and glow. Each card has bullet points of benefits and a 'Get Started' button. Add atmospheric background effect (noise texture or gradient).",
+    "Rewrite app/page.js - Import all 5 components. Render them in order with appropriate spacing. Add smooth scroll behavior. Remove all old placeholder content. Mark as 'use client' since child components use client-side features (or keep page as server component and mark individual components as client).",
+    "Run pnpm build to verify the full page compiles"
+  ],
+  "acceptance_criteria": [
+    "pnpm build succeeds without errors",
+    "app/components/Hero.js exists with animated gradient background and staggered text reveals",
+    "app/components/HowItWorks.js exists with 4-step process visualization and scroll animations",
+    "app/components/InteractiveDemo.js exists with interactive card matching UI and framer-motion animations",
+    "app/components/SocialProof.js exists with animated counters and scrolling marquee",
+    "app/components/CTA.js exists with dual role-selection cards and hover interactions",
+    "app/page.js imports and renders all 5 sections in order",
+    "All components use the dark theme CSS variables defined in globals.css",
+    "Framer-motion is used for scroll reveals, hover states, and interactive elements"
+  ],
+  "verification": [
+    "cd /projects/sandbox/YT-matcher && pnpm build"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

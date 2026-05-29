@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #0A0A0F;
+  --bg-secondary: #141420;
+  --bg-tertiary: #1E1E2E;
+  --accent: #F59E0B;
+  --accent-secondary: #06B6D4;
+  --text-primary: #F5F5F0;
+  --text-secondary: #9CA3AF;
+  --text-accent: #F59E0B;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  scroll-behavior: smooth;
+}
