@@ -140,6 +140,12 @@ export default function InteractiveDemo() {
               </svg>
               {matchedIds.length} creator{matchedIds.length > 1 ? 's' : ''} matched!
             </span>
+            <button
+              onClick={() => setMatchedIds([])}
+              className="block mx-auto mt-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-[family-name:var(--font-outfit)] transition-colors duration-200"
+            >
+              Reset
+            </button>
           </motion.div>
         )}
       </div>

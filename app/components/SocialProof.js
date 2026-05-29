@@ -11,7 +11,7 @@ function AnimatedCounter({ target, suffix = '', prefix = '' }) {
   useEffect(() => {
     if (!isInView) return
 
-    let start = 0
+    let rafId
     const duration = 2000
     const startTime = performance.now()
 
@@ -22,11 +22,15 @@ function AnimatedCounter({ target, suffix = '', prefix = '' }) {
       const current = Math.floor(eased * target)
       setCount(current)
       if (progress < 1) {
-        requestAnimationFrame(animate)
+        rafId = requestAnimationFrame(animate)
       }
     }
 
-    requestAnimationFrame(animate)
+    rafId = requestAnimationFrame(animate)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+    }
   }, [isInView, target])
 
   return (
