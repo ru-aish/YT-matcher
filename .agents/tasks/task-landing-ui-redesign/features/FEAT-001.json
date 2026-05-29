@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-001",
+  "type": "chore",
+  "description": "Install and configure Tailwind CSS v4, framer-motion, and Google Fonts. Set up the dark theme design system with CSS variables, global styles, and font imports in layout.js.",
+  "status": "completed",
+  "steps": [
+    "Run: cd /projects/sandbox/YT-matcher && pnpm add tailwindcss @tailwindcss/postcss postcss framer-motion",
+    "Create postcss.config.mjs with Tailwind CSS plugin configuration",
+    "Create app/globals.css with: @import 'tailwindcss'; directive, then CSS custom properties for the dark theme design system (--bg-primary: near-black, --bg-secondary: dark charcoal, --accent: a sharp warm accent like amber/gold #F59E0B or electric cyan #06B6D4, --text-primary: off-white #F5F5F0, --text-secondary: muted gray #9CA3AF, --text-accent: the accent color). Add base body styles targeting dark background and light text.",
+    "Update app/layout.js to: import './globals.css', add Google Fonts via next/font/google - use 'Space Grotesk' for headings (distinctive geometric sans) and 'Outfit' for body text (modern, clean). Apply font CSS variables to the html element. Keep metadata but update title to 'YT Matcher - Creator x Brand Matchmaking' and description.",
+    "Run pnpm build to verify everything compiles correctly"
+  ],
+  "acceptance_criteria": [
+    "pnpm build succeeds without errors",
+    "globals.css contains Tailwind import and CSS custom properties for dark theme",
+    "layout.js imports globals.css and configures Google Fonts via next/font/google",
+    "postcss.config.mjs exists with tailwind plugin",
+    "framer-motion is in package.json dependencies"
+  ],
+  "verification": [
+    "cd /projects/sandbox/YT-matcher && pnpm build"
+  ],
+  "blocked_reason": null,
+  "findings": "All dependencies installed successfully. Tailwind CSS v4 with @tailwindcss/postcss plugin compiles correctly. Build passes with no warnings. sharp build script was ignored by pnpm (non-blocking)."
+}
