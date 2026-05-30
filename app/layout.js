@@ -1,6 +1,8 @@
+import './globals.css'
+
 export const metadata = {
-  title: 'YT Matcher',
-  description: 'YouTube Video Matcher Application',
+  title: 'YT-Matcher — Where Good Taste Meets Good Money',
+  description: 'Find creators worth backing — ranked by real audience fit, not follower vanity.',
 }
 
 export default function RootLayout({ children }) {
