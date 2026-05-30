@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 import Reveal from './Reveal'
 import styles from './MatchLab.module.css'
 
@@ -272,6 +273,15 @@ export default function MatchLab() {
               </div>
             </div>
           </div>
+        </Reveal>
+
+        <Reveal className={styles.labCta} delay={160}>
+          <p className={styles.labCtaText}>
+            Those are demo profiles. Your real matches are one click away.
+          </p>
+          <Link href="/sign-up" className={styles.labCtaBtn}>
+            Find your match <span aria-hidden>→</span>
+          </Link>
         </Reveal>
       </div>
     </section>

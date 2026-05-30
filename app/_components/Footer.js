@@ -8,8 +8,8 @@ const COLS = [
     links: [
       ['How it works', '/how-it-works'],
       ['Match Lab', '/#lab'],
-      ['For creators', '/#who'],
-      ['For brands', '/#who'],
+      ['For creators', '/sign-up?role=creator'],
+      ['For brands', '/sign-up?role=brand'],
     ],
   },
   {

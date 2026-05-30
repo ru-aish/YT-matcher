@@ -5,10 +5,10 @@ import Link from 'next/link'
 import styles from './Nav.module.css'
 
 const LINKS = [
-  { label: 'How it works', href: '#how' },
-  { label: 'Match Lab', href: '#lab' },
-  { label: 'Trust', href: '#trust' },
-  { label: 'Stories', href: '#voices' },
+  { label: 'How it works', href: '/#how' },
+  { label: 'Match Lab', href: '/#lab' },
+  { label: 'Trust', href: '/#trust' },
+  { label: 'Stories', href: '/#voices' },
 ]
 
 export function MatchMark({ className }) {
@@ -58,12 +58,12 @@ export default function Nav() {
         </ul>
 
         <div className={styles.actions}>
-          <a href="#cta" className={styles.signin}>
+          <Link href="/sign-in" className={styles.signin}>
             Sign in
-          </a>
-          <a href="#cta" className={styles.cta}>
+          </Link>
+          <Link href="/sign-up" className={styles.cta}>
             Find your match
-          </a>
+          </Link>
           <button
             className={styles.burger}
             aria-label="Menu"
@@ -82,9 +82,9 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <a href="#cta" className={styles.sheetCta} onClick={() => setOpen(false)}>
+          <Link href="/sign-up" className={styles.sheetCta} onClick={() => setOpen(false)}>
             Find your match →
-          </a>
+          </Link>
         </div>
       )}
     </header>

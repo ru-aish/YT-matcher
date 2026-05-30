@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import styles from './Hero.module.css'
 
 const COPY = {
@@ -145,9 +146,9 @@ export default function Hero() {
         </div>
 
         <div className={styles.cta}>
-          <a href="#lab" className={styles.primary}>
+          <Link href={`/sign-up?role=${who}`} className={styles.primary}>
             {copy.cta}
-          </a>
+          </Link>
           <a href="#how" className={styles.secondary}>
             See how it works ↗
           </a>
