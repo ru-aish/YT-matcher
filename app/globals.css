@@ -1,0 +1,73 @@
+/* Global Styles for YT-Matcher */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Warm cream/coral palette */
+  --bg-cream: #f5ebe0;
+  --bg-cream-light: #faf6f1;
+  --accent-coral: #e8613c;
+  --accent-coral-hover: #d4522f;
+  --accent-coral-light: #fde8e2;
+  --text-dark: #1a1a1a;
+  --text-medium: #4a4a4a;
+  --text-light: #7a7a7a;
+  --text-muted: #9a9a9a;
+  --border-light: #e8ddd4;
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Dark theme for dashboard */
+  --dash-bg: #0f0f0f;
+  --dash-surface: #1a1a1a;
+  --dash-border: #2a2a2a;
+  --dash-text: #f0f0f0;
+  --dash-text-muted: #999999;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  outline: none;
+}
+
+/* Utility: ensure no black-on-black text anywhere */
+select option {
+  background: var(--white);
+  color: var(--text-dark);
+}
+
+select {
+  color: var(--text-dark);
+  background: var(--white);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
