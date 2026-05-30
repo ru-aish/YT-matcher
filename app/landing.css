@@ -65,19 +65,16 @@
   margin: 0;
 }
 
-.landing a {
-  color: inherit;
-}
+/* NOTE: intentionally NO `color`/`font` resets on `.landing a` / `.landing
+   button` here. A `.landing button` selector (specificity 0,1,1) would
+   out-rank CSS-module classes like `.tabOn` (0,1,0) and force `color: inherit`,
+   producing dark text on the dark "selected" backgrounds (black-on-black).
+   The app's global reset (globals.css) already gives a/button sensible
+   `color: inherit` + `font: inherit` defaults at element specificity (0,0,1),
+   which our module classes correctly override. */
 
 .landing button {
-  font: inherit;
-  color: inherit;
   cursor: pointer;
-}
-
-.landing input,
-.landing button {
-  font-family: inherit;
 }
 
 .landing img,

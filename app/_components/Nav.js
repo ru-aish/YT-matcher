@@ -28,15 +28,77 @@ export function MatchMark({ className }) {
   )
 }
 
+// Signed-in CTA: Dashboard + Sign out. Only rendered once Clerk hooks load.
+function AuthedActions({ useAuth, useClerk }) {
+  const { isSignedIn, isLoaded } = useAuth()
+  const { signOut } = useClerk()
+
+  // While Clerk resolves, show the default signed-out CTA to avoid a flash.
+  if (!isLoaded) return <SignedOutActions />
+
+  if (isSignedIn) {
+    return (
+      <>
+        <button
+          type="button"
+          className={styles.signin}
+          onClick={() => signOut({ redirectUrl: '/' })}
+        >
+          Sign out
+        </button>
+        <Link href="/dashboard" className={styles.cta}>
+          Go to dashboard →
+        </Link>
+      </>
+    )
+  }
+  return <SignedOutActions />
+}
+
+function SignedOutActions() {
+  return (
+    <>
+      <Link href="/login" className={styles.signin}>
+        Sign in
+      </Link>
+      <Link href="/signup" className={styles.cta}>
+        Find your match
+      </Link>
+    </>
+  )
+}
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [clerkHooks, setClerkHooks] = useState(null)
+  const [authState, setAuthState] = useState({ loaded: false, signedIn: false })
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Dynamically load Clerk auth hooks; gracefully no-op if Clerk isn't configured.
+  useEffect(() => {
+    let active = true
+    async function loadClerk() {
+      try {
+        if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) return
+        const clerk = await import('@clerk/nextjs')
+        if (active && clerk.useAuth && clerk.useClerk) {
+          setClerkHooks({ useAuth: clerk.useAuth, useClerk: clerk.useClerk })
+        }
+      } catch {
+        /* Clerk unavailable — keep the signed-out CTA. */
+      }
+    }
+    loadClerk()
+    return () => {
+      active = false
+    }
   }, [])
 
   return (
@@ -58,12 +120,15 @@ export default function Nav() {
         </ul>
 
         <div className={styles.actions}>
-          <Link href="/login" className={styles.signin}>
-            Sign in
-          </Link>
-          <Link href="/signup" className={styles.cta}>
-            Find your match
-          </Link>
+          {clerkHooks ? (
+            <AuthStateReporter
+              useAuth={clerkHooks.useAuth}
+              useClerk={clerkHooks.useClerk}
+              onState={setAuthState}
+            />
+          ) : (
+            <SignedOutActions />
+          )}
           <button
             className={styles.burger}
             aria-label="Menu"
@@ -82,11 +147,26 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <Link href="/signup" className={styles.sheetCta} onClick={() => setOpen(false)}>
-            Find your match →
-          </Link>
+          {authState.loaded && authState.signedIn ? (
+            <Link href="/dashboard" className={styles.sheetCta} onClick={() => setOpen(false)}>
+              Go to dashboard →
+            </Link>
+          ) : (
+            <Link href="/signup" className={styles.sheetCta} onClick={() => setOpen(false)}>
+              Find your match →
+            </Link>
+          )}
         </div>
       )}
     </header>
   )
+}
+
+// Renders the desktop actions AND lifts auth state up for the mobile sheet.
+function AuthStateReporter({ useAuth, useClerk, onState }) {
+  const auth = useAuth()
+  useEffect(() => {
+    onState({ loaded: auth.isLoaded, signedIn: Boolean(auth.isSignedIn) })
+  }, [auth.isLoaded, auth.isSignedIn, onState])
+  return <AuthedActions useAuth={useAuth} useClerk={useClerk} />
 }

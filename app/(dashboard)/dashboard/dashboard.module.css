@@ -26,6 +26,31 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent 70%);
+  opacity: 0.5;
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.statCard:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.statCard:hover::before {
+  opacity: 1;
 }
 
 .statLabel {

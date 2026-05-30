@@ -13,14 +13,14 @@ const SignIn = dynamic(() => import('@clerk/nextjs').then((mod) => mod.SignIn), 
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: '#ccff00',
+    colorPrimary: '#ff5a3c',
     colorBackground: 'transparent',
-    colorInputBackground: '#070707',
-    colorInputText: '#ffffff',
-    colorText: '#ffffff',
-    colorTextSecondary: '#b0b0b0',
-    colorTextMuted: '#666666',
-    colorBorder: 'rgba(255, 255, 255, 0.05)',
+    colorInputBackground: '#ffffff',
+    colorInputText: '#1a140d',
+    colorText: '#1a140d',
+    colorTextSecondary: '#5d5344',
+    colorTextMuted: '#8a7d69',
+    colorBorder: 'rgba(26, 20, 13, 0.14)',
     borderRadius: '12px',
   },
   elements: {
