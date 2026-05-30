@@ -18,7 +18,9 @@ import {
   ExternalLink,
   AlertTriangle,
   Sparkles,
+  PlayCircle,
 } from 'lucide-react';
+import GuidedFlow from './GuidedFlow';
 import styles from './dashboard.module.css';
 
 export default function CreatorDashboard({ initialUser }) {
@@ -30,6 +32,7 @@ export default function CreatorDashboard({ initialUser }) {
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [expressingId, setExpressingId] = useState(null);
+  const [showGuide, setShowGuide] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -94,6 +97,21 @@ export default function CreatorDashboard({ initialUser }) {
 
   return (
     <div className="stagger">
+      {/* Header */}
+      <div className={styles.dashHeader}>
+        <h2 className={styles.dashTitle}>Discover Campaigns</h2>
+        <button
+          className="btn btn-ghost"
+          onClick={() => setShowGuide(true)}
+          type="button"
+        >
+          <PlayCircle size={16} />
+          See how it works
+        </button>
+      </div>
+
+      {showGuide && <GuidedFlow role="creator" onClose={() => setShowGuide(false)} />}
+
       {/* Stats */}
       <div className={styles.statsRow}>
         <div className={styles.statCard}>

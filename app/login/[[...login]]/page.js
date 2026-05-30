@@ -7,8 +7,20 @@ import { Building2, Video } from 'lucide-react';
 import { isDevAuthBypassEnabled } from '../../../lib/dev-auth';
 import styles from './login.module.css';
 
+// While the Clerk widget chunk loads, show a branded loading state instead of
+// a bare "go back" button (which looked like the only thing on screen).
+function AuthLoading() {
+  return (
+    <div className={styles.authLoading} aria-live="polite" aria-busy="true">
+      <span className={styles.spinner} />
+      <p className={styles.loadingText}>Securing your connection…</p>
+    </div>
+  );
+}
+
 const SignIn = dynamic(() => import('@clerk/nextjs').then((mod) => mod.SignIn), {
   ssr: false,
+  loading: () => <AuthLoading />,
 });
 
 const clerkAppearance = {
@@ -149,14 +161,17 @@ export default function LoginPage() {
                 appearance={clerkAppearance}
                 routing="path"
                 path="/login"
-                redirectUrl="/dashboard?flow=signup"
                 signUpUrl="/signup"
+                fallbackRedirectUrl="/dashboard?flow=signup"
+                forceRedirectUrl="/dashboard?flow=signup"
+                signInForceRedirectUrl="/dashboard?flow=signup"
               />
               <button
                 onClick={() => setSelectedRole(null)}
-                className={styles.backButton}
+                className={styles.backLink}
+                type="button"
               >
-                ← Back to role selection
+                ← Use a different role
               </button>
             </div>
           )}

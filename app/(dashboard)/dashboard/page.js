@@ -28,15 +28,18 @@ export default async function DashboardPage({ searchParams }) {
           createdAt: created.user.createdAt ? new Date(created.user.createdAt).toISOString() : null,
         };
 
+        // If this email already had an account, its real role wins. Send the
+        // user to their actual dashboard rather than the role they just picked.
+        if (created.roleMismatch && created.existingRole) {
+          const params = new URLSearchParams({ role_notice: created.existingRole });
+          redirect(`/dashboard?${params.toString()}`);
+        }
+
         if (!created.user.profileCompleted) {
-          return <ProfileSetup initialUser={serializableUser} />;
+          return renderRoleDashboard(serializableUser, true);
         }
 
-        if (created.user.role === 'brand') {
-          return <BrandDashboard initialUser={serializableUser} />;
-        }
-
-        return <CreatorDashboard initialUser={serializableUser} />;
+        return renderRoleDashboard(serializableUser, false);
       }
 
       redirect('/signup?error=db_creation_failed');
@@ -50,15 +53,19 @@ export default async function DashboardPage({ searchParams }) {
     createdAt: user.createdAt ? new Date(user.createdAt).toISOString() : null,
   };
 
-  // If profile not completed, show profile setup
-  if (!user.profileCompleted) {
-    return <ProfileSetup initialUser={serializableUser} />;
-  }
+  // Existing account: always route by the account's true role + show the
+  // (possibly required) profile-setup overlay until the profile is completed.
+  return renderRoleDashboard(serializableUser, !user.profileCompleted)
+}
 
-  // Role-based dashboard
-  if (user.role === 'brand') {
-    return <BrandDashboard initialUser={serializableUser} />;
-  }
-
-  return <CreatorDashboard initialUser={serializableUser} />;
+// Renders the role-correct dashboard, with the profile-setup overlay mounted
+// on top when the profile still needs completing (non-skippable).
+function renderRoleDashboard(serializableUser, needsProfile) {
+  const Dashboard = serializableUser.role === 'brand' ? BrandDashboard : CreatorDashboard;
+  return (
+    <>
+      <Dashboard initialUser={serializableUser} />
+      {needsProfile && <ProfileSetup initialUser={serializableUser} />}
+    </>
+  );
 }
