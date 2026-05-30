@@ -1,0 +1,104 @@
+/* ============================================================================
+   Landing page theme — "Sun Studio"
+   Scoped entirely to the .landing wrapper so it never touches the dev app's
+   global dark/lime theme (globals.css) used by /login, /signup, /dashboard.
+   ========================================================================== */
+
+.landing {
+  /* warm editorial paper, ink, and sharp accents */
+  --paper: #f4e9d2;
+  --paper-2: #ecdfc3;
+  --paper-3: #e4d4b3;
+  --ink: #1a140d;
+  --ink-soft: #5d5344;
+  --ink-faint: #8a7d69;
+
+  --coral: #ff5a3c;
+  --coral-deep: #e3421d;
+  --blue: #2440e8;
+  --blue-deep: #1a2fb0;
+  --gold: #e6b13a;
+
+  --line: rgba(26, 20, 13, 0.14);
+  --line-soft: rgba(26, 20, 13, 0.08);
+  --shadow: 26px 30px 60px -34px rgba(26, 20, 13, 0.5);
+
+  --maxw: 1240px;
+  --gutter: clamp(1.15rem, 5vw, 4.5rem);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Landing-only type. These override the dev app's font vars within this
+     subtree only (the variables themselves are still defined globally by the
+     root layout, so login/dashboard keep Syne / Plus Jakarta / JetBrains). */
+  --font-display: var(--font-landing-display), Georgia, serif;
+  --font-serif: var(--font-landing-serif), Georgia, serif;
+  --font-mono: var(--font-landing-mono), ui-monospace, monospace;
+  --font-body: var(--font-landing-body), system-ui, -apple-system, sans-serif;
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+/* Scoped reset — only inside the landing subtree. */
+.landing *,
+.landing *::before,
+.landing *::after {
+  box-sizing: border-box;
+}
+
+.landing h1,
+.landing h2,
+.landing h3,
+.landing h4,
+.landing p,
+.landing figure,
+.landing blockquote,
+.landing ul,
+.landing ol {
+  margin: 0;
+}
+
+.landing a {
+  color: inherit;
+}
+
+.landing button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.landing input,
+.landing button {
+  font-family: inherit;
+}
+
+.landing img,
+.landing svg {
+  display: block;
+  max-width: 100%;
+}
+
+.landing ::selection {
+  background: var(--coral);
+  color: var(--paper);
+}
+
+.landing :focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing {
+    scroll-behavior: auto;
+  }
+}
