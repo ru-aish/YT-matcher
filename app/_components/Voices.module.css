@@ -1,0 +1,108 @@
+.root {
+  background: var(--paper);
+}
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter);
+}
+
+.head {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 1rem;
+}
+.heading {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.heading em {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  color: var(--coral);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+}
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  position: relative;
+  margin: 0;
+  padding: clamp(1.6rem, 3vw, 2.2rem);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper-2);
+  overflow: hidden;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.card:nth-child(2) {
+  transform: translateY(1.4rem);
+}
+.card:hover {
+  box-shadow: 18px 22px 44px -28px rgba(26, 20, 13, 0.55);
+}
+@media (max-width: 820px) {
+  .card:nth-child(2) {
+    transform: none;
+  }
+}
+
+.mark {
+  position: absolute;
+  top: -0.6rem;
+  right: 0.8rem;
+  font-family: var(--font-display), serif;
+  font-size: 7rem;
+  line-height: 1;
+  color: var(--coral);
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.quote {
+  position: relative;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.4;
+  margin-bottom: 1.5rem;
+}
+
+.cap {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.96rem;
+}
+.role {
+  display: block;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
