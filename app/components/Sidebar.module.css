@@ -1,0 +1,343 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: width var(--duration-normal) var(--ease-out);
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed);
+}
+
+/* ── Logo ── */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  height: var(--topbar-height);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebarLogo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  overflow: hidden;
+}
+
+.sidebarLogoIcon {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: #000;
+}
+
+.sidebarLogoText {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity var(--duration-fast);
+}
+
+.collapsed .sidebarLogoText {
+  opacity: 0;
+  width: 0;
+}
+
+.sidebarToggle {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: all var(--duration-fast);
+  flex-shrink: 0;
+}
+
+.sidebarToggle:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.collapsed .sidebarToggle {
+  margin: 0 auto;
+}
+
+/* ── Navigation ── */
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-md) var(--space-sm);
+  flex-shrink: 0;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--duration-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-decoration: none;
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.navLink.active {
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.navLink.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.navLinkIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLinkLabel {
+  opacity: 1;
+  transition: opacity var(--duration-fast);
+}
+
+.collapsed .navLinkLabel {
+  opacity: 0;
+  width: 0;
+}
+
+.collapsed .navLink {
+  justify-content: center;
+  padding: 0.6rem;
+}
+
+.collapsed .navLink.active::before {
+  left: 0;
+}
+
+/* ── Divider ── */
+.sidebarDivider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-sm) var(--space-lg);
+  flex-shrink: 0;
+}
+
+.sidebarSectionLabel {
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-ghost);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.collapsed .sidebarSectionLabel {
+  opacity: 0;
+}
+
+/* ── Chat Threads ── */
+.sidebarThreads {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 var(--space-sm) var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.threadItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+}
+
+.threadItem:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.threadItem.active {
+  background: var(--accent-glow);
+}
+
+.threadAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.threadAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.threadInfo {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.threadName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.threadPreview {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.threadUnread {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--accent-glow-strong);
+}
+
+.collapsed .threadInfo,
+.collapsed .threadUnread {
+  display: none;
+}
+
+/* ── Sidebar Footer ── */
+.sidebarFooter {
+  border-top: 1px solid var(--border);
+  padding: var(--space-md) var(--space-sm);
+  flex-shrink: 0;
+}
+
+.sidebarFooterUser {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.sidebarFooterInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebarFooterName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebarFooterRole {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.collapsed .sidebarFooterInfo {
+  display: none;
+}
+
+.collapsed .sidebarFooterUser {
+  justify-content: center;
+}
+
+/* ── Empty state for threads ── */
+.threadsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--text-ghost);
+  font-size: 0.75rem;
+  text-align: center;
+  gap: var(--space-sm);
+}
+
+.collapsed .threadsEmpty {
+  display: none;
+}

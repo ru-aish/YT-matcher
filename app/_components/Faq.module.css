@@ -1,0 +1,108 @@
+.root {
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+}
+.inner {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter);
+}
+
+.head {
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 1rem;
+}
+.heading {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.heading em {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  color: var(--blue);
+}
+
+.list {
+  border-top: 1px solid var(--line);
+}
+.item {
+  border-bottom: 1px solid var(--line);
+}
+.q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 1.3rem 0.25rem;
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 600;
+  color: var(--ink);
+  transition: color 0.2s ease;
+}
+.q:hover {
+  color: var(--coral);
+}
+
+.plus {
+  position: relative;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+}
+.plus i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 2px;
+  background: var(--coral);
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s var(--ease), opacity 0.3s ease;
+}
+.plus i:last-child {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+.itemOpen .plus i:last-child {
+  transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
+}
+
+.answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease);
+}
+.answer[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+.answerInner {
+  overflow: hidden;
+}
+.answerInner p {
+  padding: 0 3rem 1.4rem 0.25rem;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  max-width: 64ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer {
+    transition: none;
+  }
+}

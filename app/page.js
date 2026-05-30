@@ -1,11 +1,33 @@
-'use client'
+import './landing.css'
+import { fontVars } from './_lib/fonts'
+import Nav from './_components/Nav'
+import Hero from './_components/Hero'
+import ProofStrip from './_components/ProofStrip'
+import Pipeline from './_components/Pipeline'
+import MatchLab from './_components/MatchLab'
+import Audiences from './_components/Audiences'
+import Trust from './_components/Trust'
+import Voices from './_components/Voices'
+import Faq from './_components/Faq'
+import ClosingCta from './_components/ClosingCta'
+import Footer from './_components/Footer'
 
 export default function Home() {
   return (
-    <main style={{ padding: '2rem', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <h1>YT Matcher</h1>
-      <p>Welcome to YT Matcher - Your YouTube Video Matching Application</p>
-      <p>This app is ready for deployment on Vercel!</p>
-    </main>
+    <div className={`landing ${fontVars}`}>
+      <Nav />
+      <main>
+        <Hero />
+        <ProofStrip />
+        <Pipeline />
+        <MatchLab />
+        <Audiences />
+        <Trust />
+        <Voices />
+        <Faq />
+        <ClosingCta />
+      </main>
+      <Footer />
+    </div>
   )
 }

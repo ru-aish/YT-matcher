@@ -7,15 +7,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "node --check app/actions.js && node --check app/auth-callback/page.js && node --check 'app/(dashboard)/AppShellWrapper.js' && node --check 'app/(dashboard)/dashboard/BrandDashboard.js' && node --check 'app/(dashboard)/dashboard/CreatorDashboard.js' && node --check 'app/(dashboard)/dashboard/ProfileSetup.js' && node --check 'app/(dashboard)/dashboard/page.js' && node --check 'app/(dashboard)/deal/[id]/DealClient.js' && node --check 'app/(dashboard)/deal/[id]/page.js' && node --check 'app/(dashboard)/layout.js' && node --check 'app/(dashboard)/profile/page.js' && node --check app/layout.js && node --check app/login/page.js && node --check app/page.js && node --check app/signup/page.js && node --check app/test-bypass/route.js && node --check lib/db.js && node --check lib/dev-auth.js && node --check lib/email.js && node --check lib/pusher.js && node --check lib/schema.js && node --check scripts/check-sidebar-styles.mjs && node --check scripts/create-test-deal.js && node --check scripts/db-add-chat-tables.js && node --check scripts/db-add-marketplace-schema.js && node --check scripts/seed-test-users.js && node --check scripts/test-websocket.js",
+    "db:chat": "node scripts/db-add-chat-tables.js",
+    "db:schema": "node scripts/db-add-marketplace-schema.js",
+    "seed:chat-test-users": "node scripts/seed-test-users.js",
+    "seed:chat-test-deal": "node scripts/create-test-deal.js",
+    "test:chat": "node scripts/test-websocket.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
+    "@clerk/nextjs": "^7.3.7",
+    "@neondatabase/serverless": "^1.1.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "^1.16.0",
     "next": "^16.2.6",
+    "pusher": "^5.3.3",
+    "pusher-js": "^8.5.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "resend": "^6.12.3"
+  },
+  "devDependencies": {
+    "playwright": "^1.57.0"
   }
 }

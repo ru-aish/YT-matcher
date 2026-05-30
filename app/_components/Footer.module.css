@@ -1,0 +1,105 @@
+.root {
+  background: var(--ink);
+  color: var(--paper);
+}
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gutter) clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: 1.4fr 2fr;
+  gap: clamp(2rem, 6vw, 4rem);
+}
+@media (max-width: 760px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  font-family: var(--font-serif), serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+.dot {
+  color: var(--coral);
+}
+.tagline {
+  margin-top: 1rem;
+  max-width: 34ch;
+  color: rgba(244, 233, 210, 0.62);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  color: rgba(244, 233, 210, 0.78);
+}
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 8px var(--coral);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+@media (max-width: 480px) {
+  .cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+}
+.colTitle {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 233, 210, 0.5);
+  margin-bottom: 1rem;
+}
+.col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.col a {
+  text-decoration: none;
+  color: rgba(244, 233, 210, 0.85);
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+.col a:hover {
+  color: var(--coral);
+}
+
+.bottom {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.4rem var(--gutter);
+  border-top: 1px solid rgba(244, 233, 210, 0.14);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  color: rgba(244, 233, 210, 0.55);
+}
