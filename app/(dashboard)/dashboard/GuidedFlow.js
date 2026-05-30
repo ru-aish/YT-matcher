@@ -68,26 +68,8 @@ const DEMO = {
   },
 };
 
-// A tiny scripted timeline runner that respects reduced-motion + cleanup.
-function useScript(steps, playing, onDone) {
-  const timers = useRef([]);
-  useEffect(() => {
-    if (!playing) return;
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-    let acc = 0;
-    steps.forEach(({ at, run }) => {
-      acc = at;
-      timers.current.push(setTimeout(run, at));
-    });
-    if (onDone) timers.current.push(setTimeout(onDone, acc + 2200));
-    return () => timers.current.forEach(clearTimeout);
-  }, [playing, steps, onDone]);
-}
-
 export default function GuidedFlow({ role = 'brand', onClose }) {
   const isBrand = role === 'brand';
-  const data = isBrand ? DEMO.brand : DEMO.creator;
 
   // cursor position (in % of the stage)
   const [cursor, setCursor] = useState({ x: 12, y: 14 });
@@ -115,20 +97,7 @@ export default function GuidedFlow({ role = 'brand', onClose }) {
     setTimeout(() => setClicking(false), 260);
   }, []);
 
-  const typeInto = useCallback((field, value, baseDelay) => {
-    // reveal characters progressively
-    for (let i = 1; i <= value.length; i++) {
-      setTimeout(() => {
-        setFields((f) => ({ ...f, [field]: value.slice(0, i) }));
-      }, baseDelay + i * 26);
-    }
-  }, []);
-
-  const pushChat = useCallback((msg, delay) => {
-    setTimeout(() => setChatMsgs((m) => [...m, msg]), delay);
-  }, []);
-
-  // Reset everything when (re)playing or switching role
+  // Reset all stage state (called at the start of each play / replay).
   const reset = useCallback(() => {
     setCursor({ x: 12, y: 14 });
     setModalOpen(false);
@@ -142,48 +111,65 @@ export default function GuidedFlow({ role = 'brand', onClose }) {
     setCaption('');
   }, []);
 
+  // ---- Timeline engine ----------------------------------------------------
+  // Runs ONCE per (role, replay). Scripts are defined inside the effect so the
+  // step arrays are not recreated on every render (which previously retriggered
+  // the effect on each setState and restarted the walkthrough from the start).
   useEffect(() => {
     reset();
-  }, [role, replay, reset]);
 
-  // ---- Brand script -------------------------------------------------------
-  const brandSteps = [
-    { at: 400, run: () => { setCaption('A brand starts by creating a campaign brief.'); moveTo(82, 8); } },
-    { at: 1100, run: () => { click(); setModalOpen(true); } },
-    { at: 1500, run: () => { setCaption('Fields fill in with the campaign details…'); moveTo(50, 32); typeInto('title', DEMO.brand.campaign.title, 0); } },
-    { at: 2500, run: () => typeInto('budget', DEMO.brand.campaign.budget, 0) },
-    { at: 3100, run: () => typeInto('deliverable', DEMO.brand.campaign.deliverable, 0) },
-    { at: 4000, run: () => typeInto('desc', DEMO.brand.campaign.desc, 0) },
-    { at: 5200, run: () => { setCaption('Publish the campaign.'); moveTo(70, 86); } },
-    { at: 5800, run: () => { click(); setModalOpen(false); setPublished(true); } },
-    { at: 6600, run: () => { setCaption('Creators who fit start showing interest…'); setShowInterested(true); } },
-    { at: 8000, run: () => { setCaption('The brand picks one and starts the conversation.'); moveTo(78, 50); } },
-    { at: 8700, run: () => { click(); setChatOpen(true); } },
-    { at: 9200, run: () => { setCaption('The view expands into a live chat with that creator.'); } },
-    { at: 9500, run: () => pushChat(DEMO.brand.chat[0], 0) },
-    { at: 10400, run: () => pushChat(DEMO.brand.chat[1], 0) },
-    { at: 11400, run: () => pushChat(DEMO.brand.chat[2], 0) },
-    { at: 12300, run: () => pushChat(DEMO.brand.chat[3], 0) },
-    { at: 12800, run: () => setCaption('That’s the brand journey — match, agree, chat.') },
-  ];
+    const timers = [];
+    const at = (ms, fn) => timers.push(setTimeout(fn, ms));
 
-  // ---- Creator script -----------------------------------------------------
-  const creatorSteps = [
-    { at: 400, run: () => { setCaption('A creator browses open campaigns from brands.'); moveTo(20, 28); } },
-    { at: 1300, run: () => { setCaption('They open one that fits their channel.'); moveTo(28, 30); } },
-    { at: 1900, run: () => { click(); setSelectedCampaign(0); } },
-    { at: 2400, run: () => { setCaption('Campaign details load…'); } },
-    { at: 3500, run: () => { setDetailsReady(true); setCaption('They express interest — and a chat opens.'); moveTo(72, 78); } },
-    { at: 4300, run: () => { click(); setChatOpen(true); } },
-    { at: 4800, run: () => setCaption('The view expands into a live chat with the brand.') },
-    { at: 5100, run: () => pushChat(DEMO.creator.chat[0], 0) },
-    { at: 6000, run: () => pushChat(DEMO.creator.chat[1], 0) },
-    { at: 7000, run: () => pushChat(DEMO.creator.chat[2], 0) },
-    { at: 7900, run: () => pushChat(DEMO.creator.chat[3], 0) },
-    { at: 8400, run: () => setCaption('That’s the creator journey — discover, apply, chat.') },
-  ];
+    const typeInto = (field, value, baseDelay) => {
+      for (let i = 1; i <= value.length; i++) {
+        at(baseDelay + i * 28, () =>
+          setFields((f) => ({ ...f, [field]: value.slice(0, i) }))
+        );
+      }
+    };
+    const pushChat = (msg, delay) => at(delay, () => setChatMsgs((m) => [...m, msg]));
 
-  useScript(isBrand ? brandSteps : creatorSteps, true, null);
+    if (isBrand) {
+      const C = DEMO.brand.campaign;
+      at(500, () => { setCaption('A brand starts by creating a campaign brief.'); moveTo(82, 9); });
+      at(1300, () => click());
+      at(1500, () => { setModalOpen(true); setCaption('Fields fill in with the campaign details…'); });
+      at(1700, () => moveTo(50, 30));
+      typeInto('title', C.title, 1900);
+      typeInto('budget', C.budget, 3100);
+      typeInto('deliverable', C.deliverable, 3900);
+      typeInto('desc', C.desc, 5000);
+      at(6400, () => { setCaption('Publish the campaign.'); moveTo(70, 88); });
+      at(7100, () => click());
+      at(7350, () => { setModalOpen(false); setPublished(true); });
+      at(8100, () => { setCaption('Creators who fit start showing interest…'); setShowInterested(true); });
+      at(9700, () => { setCaption('The brand picks one and starts the conversation.'); moveTo(80, 52); });
+      at(10500, () => click());
+      at(10750, () => { setChatOpen(true); setCaption('The view expands into a live chat with that creator.'); });
+      pushChat(DEMO.brand.chat[0], 11300);
+      pushChat(DEMO.brand.chat[1], 12400);
+      pushChat(DEMO.brand.chat[2], 13500);
+      pushChat(DEMO.brand.chat[3], 14500);
+      at(15200, () => setCaption('That’s the brand journey — match, agree, chat.'));
+    } else {
+      at(500, () => { setCaption('A creator browses open campaigns from brands.'); moveTo(22, 30); });
+      at(1500, () => { setCaption('They open one that fits their channel.'); moveTo(28, 34); });
+      at(2200, () => click());
+      at(2450, () => { setSelectedCampaign(0); setCaption('Campaign details load…'); });
+      at(4000, () => { setDetailsReady(true); setCaption('They express interest — and a chat opens.'); moveTo(72, 80); });
+      at(4900, () => click());
+      at(5150, () => { setChatOpen(true); setCaption('The view expands into a live chat with the brand.'); });
+      pushChat(DEMO.creator.chat[0], 5700);
+      pushChat(DEMO.creator.chat[1], 6800);
+      pushChat(DEMO.creator.chat[2], 7900);
+      pushChat(DEMO.creator.chat[3], 8900);
+      at(9600, () => setCaption('That’s the creator journey — discover, apply, chat.'));
+    }
+
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role, replay]);
 
   // close on Escape
   useEffect(() => {
