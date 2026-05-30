@@ -1,0 +1,124 @@
+.root {
+  position: relative;
+  background: var(--coral);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.marquee {
+  border-bottom: 1.5px solid rgba(244, 233, 210, 0.4);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.track {
+  display: inline-flex;
+  font-family: var(--font-display), serif;
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  padding: 0.5rem 0;
+  color: rgba(244, 233, 210, 0.55);
+  animation: scroll 26s linear infinite;
+}
+.track span {
+  padding-right: 0.5rem;
+}
+
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(3.5rem, 8vw, 6rem) var(--gutter) clamp(3rem, 7vw, 5rem);
+  text-align: center;
+}
+
+.headline {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 7vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.015em;
+}
+.headline em {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  -webkit-text-stroke: 1.4px var(--paper);
+  color: transparent;
+}
+
+.sub {
+  max-width: 46ch;
+  margin: 1.4rem auto 0;
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
+  line-height: 1.55;
+  color: rgba(244, 233, 210, 0.92);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 2.25rem auto 0;
+  max-width: 480px;
+}
+.input {
+  flex: 1 1 240px;
+  padding: 0.95rem 1.2rem;
+  border: 1.5px solid rgba(244, 233, 210, 0.55);
+  border-radius: 999px;
+  background: rgba(244, 233, 210, 0.1);
+  color: var(--paper);
+  font-size: 1rem;
+}
+.input::placeholder {
+  color: rgba(244, 233, 210, 0.6);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--paper);
+  background: rgba(244, 233, 210, 0.16);
+}
+.button {
+  padding: 0.95rem 1.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  transition: transform 0.25s var(--ease), background 0.25s ease;
+}
+.button:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+.thanks {
+  margin: 2.25rem auto 0;
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  max-width: 40ch;
+}
+.thanks strong {
+  font-style: normal;
+}
+
+.fine {
+  margin-top: 1.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: rgba(244, 233, 210, 0.78);
+}
+
+@keyframes scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
