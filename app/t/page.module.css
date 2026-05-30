@@ -1,0 +1,190 @@
+.root {
+  --bg: #08080a;
+  --ink: #f4f1ea;
+  --muted: #8a857c;
+  --line: rgba(244, 241, 234, 0.1);
+  --accent: #e8a33d;
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-archivo), sans-serif;
+  padding: clamp(1.5rem, 5vw, 5rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* atmosphere */
+.glow {
+  position: absolute;
+  top: -25%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(
+    circle at center,
+    rgba(232, 163, 61, 0.16),
+    rgba(232, 163, 61, 0) 60%
+  );
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.header {
+  max-width: 70ch;
+  margin-bottom: clamp(3rem, 7vw, 6rem);
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.kicker {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--font-fraunces), serif;
+  font-weight: 300;
+  font-size: clamp(2.8rem, 9vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.lede {
+  max-width: 44ch;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  background: var(--bg);
+  color: inherit;
+  text-decoration: none;
+  min-height: 240px;
+  transition: background 0.4s ease, transform 0.4s ease;
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.15s + var(--i) * 0.08s);
+}
+
+.card:hover {
+  background: #101015;
+}
+
+.card:hover .cardArrow {
+  transform: translate(6px, -6px);
+  color: var(--accent);
+}
+
+.card:hover .cardTitle {
+  color: var(--accent);
+}
+
+.cardN {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.cardKind {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: auto;
+}
+
+.cardTitle {
+  font-family: var(--font-fraunces), serif;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.05;
+  transition: color 0.3s ease;
+}
+
+.cardDesc {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: 34ch;
+}
+
+.cardArrow {
+  position: absolute;
+  top: clamp(1.5rem, 3vw, 2.4rem);
+  right: clamp(1.5rem, 3vw, 2.4rem);
+  font-size: 1.3rem;
+  color: var(--muted);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.foot code {
+  color: var(--ink);
+  background: rgba(244, 241, 234, 0.06);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .card {
+    animation: none;
+  }
+}
