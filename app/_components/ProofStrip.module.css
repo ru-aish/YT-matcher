@@ -1,0 +1,90 @@
+.root {
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(2.25rem, 5vw, 3.5rem) var(--gutter);
+}
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.75rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+}
+@media (max-width: 720px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1rem;
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border-left: 2px solid var(--coral);
+  padding-left: 1rem;
+}
+.big {
+  font-family: var(--font-display), serif;
+  font-size: clamp(2.1rem, 4.5vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.statLabel {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  max-width: 18ch;
+}
+
+.rosterWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--line);
+}
+.rosterTitle {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  margin-right: 0.5rem;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tags li {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: background 0.25s ease, transform 0.25s var(--ease),
+    border-color 0.25s ease;
+  cursor: default;
+}
+.tags li:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  transform: translateY(-2px) rotate(-2deg);
+}

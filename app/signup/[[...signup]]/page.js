@@ -7,20 +7,31 @@ import { Building2, Video } from 'lucide-react';
 import { isDevAuthBypassEnabled } from '../../../lib/dev-auth';
 import styles from '../../login/[[...login]]/login.module.css';
 
+// Branded loading state while the Clerk widget chunk downloads.
+function AuthLoading() {
+  return (
+    <div className={styles.authLoading} aria-live="polite" aria-busy="true">
+      <span className={styles.spinner} />
+      <p className={styles.loadingText}>Securing your connection…</p>
+    </div>
+  );
+}
+
 const SignUp = dynamic(() => import('@clerk/nextjs').then((mod) => mod.SignUp), {
   ssr: false,
+  loading: () => <AuthLoading />,
 });
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: '#ccff00',
+    colorPrimary: '#ff5a3c',
     colorBackground: 'transparent',
-    colorInputBackground: '#070707',
-    colorInputText: '#ffffff',
-    colorText: '#ffffff',
-    colorTextSecondary: '#b0b0b0',
-    colorTextMuted: '#666666',
-    colorBorder: 'rgba(255, 255, 255, 0.05)',
+    colorInputBackground: '#ffffff',
+    colorInputText: '#1a140d',
+    colorText: '#1a140d',
+    colorTextSecondary: '#5d5344',
+    colorTextMuted: '#8a7d69',
+    colorBorder: 'rgba(26, 20, 13, 0.14)',
     borderRadius: '12px',
   },
   elements: {
@@ -148,12 +159,14 @@ export default function SignUpPage() {
                 signInUrl="/login"
                 fallbackRedirectUrl="/dashboard?flow=signup"
                 forceRedirectUrl="/dashboard?flow=signup"
+                signUpForceRedirectUrl="/dashboard?flow=signup"
               />
               <button
                 onClick={() => setSelectedRole(null)}
-                className={styles.backButton}
+                className={styles.backLink}
+                type="button"
               >
-                ← Back to role selection
+                ← Use a different role
               </button>
             </div>
           )}

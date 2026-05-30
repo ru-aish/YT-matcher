@@ -97,12 +97,19 @@ export async function createDbUserAction(role) {
 
     if (existingResult.length > 0) {
       const existing = existingResult[0];
-      const nextRole = role || existing.role || 'creator';
+
+      // One email = one account. An existing account's role is immutable here:
+      // the role chosen during a *new* signup attempt must never overwrite the
+      // role this email already registered with. Flag a mismatch so the caller
+      // can inform the user instead of silently logging them into the wrong
+      // role's dashboard.
+      const roleMismatch = Boolean(role) && existing.role && role !== existing.role;
+
+      // Only sync identity fields (Clerk id / email / name / avatar) — never role.
       const needsUpdate =
         existing.googleId !== userId ||
         (email && existing.email !== email) ||
-        existing.name !== name ||
-        existing.role !== nextRole ||
+        (name && existing.name !== name) ||
         (avatarUrl && existing.avatarUrl !== avatarUrl);
 
       if (needsUpdate) {
@@ -110,17 +117,17 @@ export async function createDbUserAction(role) {
           .set({
             email: email || existing.email,
             name: name || existing.name,
-            role: nextRole,
+            // role intentionally preserved — never reassigned from a signup choice.
             avatarUrl: avatarUrl || existing.avatarUrl || null,
             googleId: userId,
           })
           .where(eq(users.id, existing.id))
           .returning();
 
-        return { success: true, user: updated[0] };
+        return { success: true, user: updated[0], roleMismatch, existingRole: existing.role };
       }
 
-      return { success: true, user: existing };
+      return { success: true, user: existing, roleMismatch, existingRole: existing.role };
     }
 
     const newDbUser = await db.insert(users).values({
@@ -160,6 +167,20 @@ export async function updateProfileAction(profileData) {
         role: effectiveRole,
         youtubeChannel: effectiveRole === 'creator' ? profileData.youtubeChannel : null,
         companyName: effectiveRole === 'brand' ? profileData.companyName : null,
+        // Extended role-specific fields (columns already exist in schema).
+        channelName: effectiveRole === 'creator' ? (profileData.channelName ?? null) : null,
+        primaryNiche: effectiveRole === 'creator' ? (profileData.primaryNiche ?? null) : null,
+        subscriberCount:
+          effectiveRole === 'creator' && profileData.subscriberCount != null && profileData.subscriberCount !== ''
+            ? parseInt(profileData.subscriberCount, 10) || null
+            : null,
+        minimumSponsorshipRateUsd:
+          effectiveRole === 'creator' && profileData.minimumSponsorshipRateUsd != null && profileData.minimumSponsorshipRateUsd !== ''
+            ? parseInt(profileData.minimumSponsorshipRateUsd, 10) || null
+            : null,
+        websiteUrl: effectiveRole === 'brand' ? (profileData.websiteUrl ?? null) : null,
+        productDescription: effectiveRole === 'brand' ? (profileData.productDescription ?? null) : null,
+        targetCreatorNiche: effectiveRole === 'brand' ? (profileData.targetCreatorNiche ?? null) : null,
         avatarUrl: profileData.avatarUrl || user.avatarUrl || null,
         profileCompleted: true
       })

@@ -15,7 +15,9 @@ import {
   Handshake,
   DollarSign,
   AlertTriangle,
+  PlayCircle,
 } from 'lucide-react';
+import GuidedFlow from './GuidedFlow';
 import styles from './dashboard.module.css';
 
 export default function BrandDashboard({ initialUser }) {
@@ -24,6 +26,7 @@ export default function BrandDashboard({ initialUser }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -102,14 +105,26 @@ export default function BrandDashboard({ initialUser }) {
       {/* Header */}
       <div className={styles.dashHeader}>
         <h2 className={styles.dashTitle}>My Campaigns</h2>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowCreateModal(true)}
-        >
-          <Plus size={16} />
-          New Campaign
-        </button>
+        <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+          <button
+            className="btn btn-ghost"
+            onClick={() => setShowGuide(true)}
+            type="button"
+          >
+            <PlayCircle size={16} />
+            See how it works
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <Plus size={16} />
+            New Campaign
+          </button>
+        </div>
       </div>
+
+      {showGuide && <GuidedFlow role="brand" onClose={() => setShowGuide(false)} />}
 
       {/* Stats */}
       <div className={styles.statsRow}>
